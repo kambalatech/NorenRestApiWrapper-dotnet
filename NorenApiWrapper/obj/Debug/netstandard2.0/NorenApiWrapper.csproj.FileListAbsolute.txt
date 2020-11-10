@@ -1,0 +1,9 @@
+C:\workshop\ftc\NorenApiWrapper\bin\Debug\netstandard2.0\NorenApiWrapper.deps.json
+C:\workshop\ftc\NorenApiWrapper\bin\Debug\netstandard2.0\NorenApiWrapper.dll
+C:\workshop\ftc\NorenApiWrapper\obj\Debug\netstandard2.0\NorenApiWrapper.AssemblyInfoInputs.cache
+C:\workshop\ftc\NorenApiWrapper\obj\Debug\netstandard2.0\NorenApiWrapper.AssemblyInfo.cs
+C:\workshop\ftc\NorenApiWrapper\bin\Debug\netstandard2.0\NorenApiWrapper.pdb
+C:\workshop\ftc\NorenApiWrapper\obj\Debug\netstandard2.0\NorenApiWrapper.csproj.CoreCompileInputs.cache
+C:\workshop\ftc\NorenApiWrapper\obj\Debug\netstandard2.0\NorenApiWrapper.dll
+C:\workshop\ftc\NorenApiWrapper\obj\Debug\netstandard2.0\NorenApiWrapper.pdb
+C:\workshop\ftc\NorenApiWrapper\obj\Debug\netstandard2.0\NorenApiWrapper.csprojAssemblyReference.cache
