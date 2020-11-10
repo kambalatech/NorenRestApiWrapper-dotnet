@@ -13,40 +13,62 @@ namespace NorenRestApiWrapper
         WebsocketClient wsclient;
         bool loggedin;
         LoginRespMessage loginResp;
+        LoginMessage loginReq;
         public NorenRestApi()
         {            
             rClient = new RESTClient();            
         }
-        public void OnLoginResponse(NorenResponseMsg Response, bool ok)
-        {
-            if(ok)
-            { 
-                loginResp = Response as LoginRespMessage;
-            }
 
+        private string getJKey
+        {
+            get
+            {
+                return "jKey=" + loginResp?.susertoken;
+            }
+        }
+        public void OnLoginResponseNotify(NorenResponseMsg responseMsg)
+        {
+            loginResp = responseMsg as LoginRespMessage;
         }
         public bool SendLogin(OnResponse response, string endPoint,LoginMessage login)
         {
-            
+            loginReq = login;
             rClient.endPoint = endPoint;
             string uri = "QuickAuth";
             var ResponseHandler = new NorenApiResponse<LoginRespMessage>(response);
+            ResponseHandler.ResponseNotifyInstance += OnLoginResponseNotify;
 
-            
+
             rClient.makeRequest(ResponseHandler, uri, login.toJson());
             return true;
         }
 
-        public bool SendLogout()
+        public bool SendLogout(OnResponse response)
         {
+            if (loginResp == null)
+                return false;
+
             LogoutMessage logout = new LogoutMessage();
-            logout.uid = _user.uid;
-            logout.jKey = "1234";
+            logout.uid = loginReq.uid;
+            
             string uri = "Logout";
-            rClient.makeRequest(null, uri, logout.toJson());
+            var ResponseHandler = new NorenApiResponse<LogoutRespMessage>(response);
+            rClient.makeRequest(ResponseHandler, uri, logout.toJson(), getJKey);
             return true;
         }
 
+        public bool SendGetUserDetails(OnResponse response)
+        {
+            if (loginResp == null)
+                return false;
+
+            UserDetailsMessage userDetails = new UserDetailsMessage();
+            userDetails.uid  = loginReq.uid;
+            string uri = "UserDetails";
+            
+            rClient.makeRequest(new NorenApiResponse<UserDetailsRespMessage>(response), uri, userDetails.toJson(), getJKey);
+            return true;
+        }
         public bool AddFeedDevice(string uri)
         {
             var url = new Uri(uri);
@@ -58,8 +80,8 @@ namespace NorenRestApiWrapper
 
             ConnectMessage connect = new ConnectMessage();
             connect.t = "c";
-            connect.uid = _user.uid;
-            connect.actid = _user.uid;
+            connect.uid = loginReq.uid;
+            connect.actid = loginReq.uid;
             connect.susertoken = "54321";
 
             wsclient.MessageReceived.Subscribe(msg => Console.WriteLine($"Message received: {msg}"));

@@ -9,6 +9,7 @@ namespace NorenRestApiWrapper
 
     public class BaseApiResponse
     {
+        
         public virtual void OnMessageNotify(HttpResponseMessage httpResponse, string data)
         {
 
@@ -16,6 +17,9 @@ namespace NorenRestApiWrapper
     }
     public class NorenApiResponse<T> :  BaseApiResponse where T : NorenResponseMsg, new()
     {
+        //call the delegate for those interested
+        public delegate void ResponseNotify(NorenResponseMsg httpResponse); // declare a delegate  
+        public ResponseNotify ResponseNotifyInstance; // create a delegate instance  
         public NorenApiResponse(OnResponse Response)
         {
             onResponse = Response;
@@ -32,6 +36,7 @@ namespace NorenRestApiWrapper
             if (httpResponse.IsSuccessStatusCode)
             { 
                 Message = JsonConvert.DeserializeObject<T>(data);
+                ResponseNotifyInstance?.Invoke(Message);
                 onResponse(Message, true);
             }
             else
@@ -40,7 +45,7 @@ namespace NorenRestApiWrapper
                 onResponse(Message, false);
             }
 
-
+            
         }
     }
 

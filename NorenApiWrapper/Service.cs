@@ -20,30 +20,42 @@ namespace NorenRestApiWrapper
             {
                 _endPoint = value;
 
-                client.BaseAddress = new Uri(value);
+                if(client.BaseAddress == null)
+                    client.BaseAddress = new Uri(endPoint);
             }
         }
 
 
         //Default Constructor
         public RESTClient()
-        {            
+        {
             client.DefaultRequestHeaders
                   .Accept
-                  .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+                  .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header         
+
         }
 
-       
 
-        public async void makeRequest(BaseApiResponse response,string uri, string message)
+
+        public async void makeRequest(BaseApiResponse response,string uri, string message, string key = null)
         {
+            
+            
             string strResponseValue = string.Empty;
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, uri);
-            request.Content = new StringContent(message,
+
+            
+
+            if(key != null)
+                request.Content = new StringContent(message + "&" + key,
                                                 Encoding.UTF8,
                                                 "application/json");//CONTENT-TYPE header
-
+            else
+                request.Content = new StringContent(message,
+                                                Encoding.UTF8,
+                                                "application/json");//CONTENT-TYPE 
+            Console.WriteLine("Request:" + uri + " " + message);
 
             await client.SendAsync(request)
                   .ContinueWith(async responseTask =>

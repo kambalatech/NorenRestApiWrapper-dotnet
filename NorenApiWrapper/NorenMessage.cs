@@ -24,10 +24,7 @@ namespace NorenRestApiWrapper
         public virtual string toJson()
         {
             string json = JsonConvert.SerializeObject(this);
-            string prefix = "jData=";
-
-            Console.WriteLine(prefix + json);
-            Debug.WriteLine(prefix + json);
+            string prefix = "jData=";            
             return prefix + json;
         }
     }
@@ -64,11 +61,34 @@ namespace NorenRestApiWrapper
     }
 
     public class LogoutMessage : NorenMessage
-    {
-        public string jKey;
+    {        
         public string uid;
     }
 
+    public class LogoutRespMessage : NorenResponseMsg
+    {
+        public string request_time;
+        
+        public string emsg;
+    }
+    public class UserDetailsMessage : NorenMessage
+    {        
+        public string uid;        
+    }
+
+    public class UserDetailsRespMessage : NorenResponseMsg
+    {
+        public string exarr;
+        public string orarr;
+        public string prarr;
+        public string brkname;
+        public string brnchid;
+        public string email;
+        public string actid;
+        public string uprev;
+        public string request_time;
+        public string emsg;
+    }
     public class ConnectMessage : NorenWSMessage
     {
         

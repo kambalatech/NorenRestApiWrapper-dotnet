@@ -8,26 +8,35 @@ namespace NorenRestSample
 {
     class Program
     {
+        public static void OnResponseNOP(NorenResponseMsg Response, bool ok)
+        {
+
+        }
         public static void OnResponse(NorenResponseMsg Response, bool ok)
         {
             LoginRespMessage loginResp = Response as LoginRespMessage;
-            Console.WriteLine(loginResp.toJson());
+            //Console.WriteLine(loginResp.toJson());
+            
+            nApi.SendGetUserDetails(Program.OnResponseNOP);
+            //Console.WriteLine("Logout Exit..");
         }
+        static NorenRestApi nApi = new NorenRestApi();
         static void Main(string[] args)
         {
-            NorenRestApi nApi = new NorenRestApi();
+           
             string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
 
             LoginMessage loginMessage = new LoginMessage();
             loginMessage.apkversion = "1.0.0";
             loginMessage.uid = "GURURAJ";
-            loginMessage.pwd = "3a17be5bc13d62ccea01c818ac243532d9de839fbcbaf4fa5a20b95ffdad804c";
+            loginMessage.pwd = "378145cba3272104505a3c776d10a1b64947742e3d4966831cb4c8746015acac";
             loginMessage.factor2 = "AAAAA1234A";
             loginMessage.imei = "134243434";
             loginMessage.source = "MOB";
 
             nApi.SendLogin(Program.OnResponse, endPoint, loginMessage);
 
+            Console.Read();
             string feedws = "ws://kurma.kambala.co.in:9655/NorenStream/NorenWS";
             
 
@@ -35,10 +44,9 @@ namespace NorenRestSample
 
             nApi.SubscribeToken("NSE", "NIFTY");
             nApi.SubscribeToken("NSE", "22");
-            //Console.Read();
-            //Console.WriteLine("Sending Logout..");
-            //nApi.SendLogout();
-            Console.WriteLine("Logout Exit..");
+            
+            
+            
             Console.Read();
         }
     }
