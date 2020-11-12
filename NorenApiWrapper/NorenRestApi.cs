@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using Websocket.Client;
 
 namespace NorenRestApiWrapper
 {
+    public delegate void OnFeed(NorenWSMessage Feed);
     public class NorenRestApi
     {
         RESTClient rClient;
@@ -14,6 +16,7 @@ namespace NorenRestApiWrapper
         bool loggedin;
         LoginRespMessage loginResp;
         LoginMessage loginReq;
+        public OnFeed OnFeedCallback;
         public NorenRestApi()
         {            
             rClient = new RESTClient();            
@@ -25,6 +28,21 @@ namespace NorenRestApiWrapper
             {
                 return "jKey=" + loginResp?.susertoken;
             }
+        }
+        public void OnFeedHandler(ResponseMessage msg)
+        {
+            NorenFeed feedmsg;
+            try
+            {
+                feedmsg = JsonConvert.DeserializeObject<NorenFeed>(msg.Text);
+            }
+            catch (JsonReaderException ex)
+            {
+                Console.WriteLine($"Error deserializing data {ex.ToString()}");
+                return;
+            }
+            Console.WriteLine($"Feed received: {msg}");
+            //OnFeedCallback?.Invoke(null);
         }
         public void OnLoginResponseNotify(NorenResponseMsg responseMsg)
         {
@@ -69,10 +87,12 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponse<UserDetailsRespMessage>(response), uri, userDetails.toJson(), getJKey);
             return true;
         }
-        public bool AddFeedDevice(string uri)
+        public bool AddFeedDevice(string uri, OnFeed handler)
         {
             var url = new Uri(uri);
             wsclient = new WebsocketClient(url);
+
+            OnFeedCallback = handler;
 
             wsclient.ReconnectTimeout = TimeSpan.FromSeconds(30);
             wsclient.ReconnectionHappened.Subscribe(info =>
@@ -82,9 +102,9 @@ namespace NorenRestApiWrapper
             connect.t = "c";
             connect.uid = loginReq.uid;
             connect.actid = loginReq.uid;
-            connect.susertoken = "54321";
+            connect.susertoken = loginResp?.susertoken;
 
-            wsclient.MessageReceived.Subscribe(msg => Console.WriteLine($"Message received: {msg}"));
+            wsclient.MessageReceived.Subscribe(msg => OnFeedHandler(msg));
             wsclient.Start();
             wsclient.Send(connect.toJson());
             return true;

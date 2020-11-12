@@ -9,4 +9,8 @@
     <PackageReference Include="Websocket.Client" Version="4.3.21" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo $(TargetPath)&#xD;&#xA;echo $(ProjectDir)..\NorenRestSample\Deps\&#xD;&#xA;copy $(TargetPath) $(ProjectDir)..\NorenRestSample\Deps\" />
+  </Target>
+
 </Project>

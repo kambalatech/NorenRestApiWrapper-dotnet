@@ -14,7 +14,7 @@ namespace NorenRestApiWrapper
         public virtual string toJson()
         {
             string json = JsonConvert.SerializeObject(this);
-            Debug.WriteLine(json);
+            
             return json;
         }
     }
@@ -40,7 +40,24 @@ namespace NorenRestApiWrapper
         }
     }
 
-    
+    public class NorenFeed : NorenWSMessage
+    {        
+        public string e;
+        public string tk;
+        public string pp;
+        public string ts;
+        public string ti;
+        public string ls;
+        public string lp;
+        public string pc;
+        public string v;
+        public string o;
+        public string h;
+        public string l;
+        public string c;
+        public string ap;
+    }
+
     public class LoginMessage : NorenMessage
     {
         public string apkversion;
@@ -76,11 +93,19 @@ namespace NorenRestApiWrapper
         public string uid;        
     }
 
+    public class ProductInfo
+    {
+        //[{"prd":"C","s_prdt_ali":"CNC","exch":["NSE","BSE"]
+        public string prd;
+        public string s_prdt_ali;
+        public List<string> exch;        
+    }
+
     public class UserDetailsRespMessage : NorenResponseMsg
     {
-        public string exarr;
-        public string orarr;
-        public string prarr;
+        public List<string> exarr;
+        public List<string> orarr;
+        public List<ProductInfo> prarr;
         public string brkname;
         public string brnchid;
         public string email;
@@ -101,7 +126,7 @@ namespace NorenRestApiWrapper
     {
         public SubsTouchline()
         {
-            t = "t";
+            t = "d";
         }
         public string k;
 

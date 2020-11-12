@@ -10,7 +10,20 @@ namespace NorenRestSample
     {
         public static void OnResponseNOP(NorenResponseMsg Response, bool ok)
         {
-
+            Console.WriteLine(Response.toJson());
+        }
+        public static void OnFeed(NorenWSMessage Feed)
+        {
+            NorenFeed feedmsg = Feed as NorenFeed;
+            Console.WriteLine(Feed.toJson());
+            if (feedmsg.t == "dk" )
+            {
+                //acknowledgment
+            }
+            if(feedmsg.t == "df")
+            {
+                //feed
+            }
         }
         public static void OnResponse(NorenResponseMsg Response, bool ok)
         {
@@ -18,6 +31,16 @@ namespace NorenRestSample
             //Console.WriteLine(loginResp.toJson());
             
             nApi.SendGetUserDetails(Program.OnResponseNOP);
+
+
+            string feedws = "ws://kurma.kambala.co.in:9655/NorenStream/NorenWS";
+
+
+            nApi.AddFeedDevice(feedws, Program.OnFeed);
+
+            //nApi.SubscribeToken("NSE", "NIFTY");
+            nApi.SubscribeToken("NSE", "22");
+
             //Console.WriteLine("Logout Exit..");
         }
         static NorenRestApi nApi = new NorenRestApi();
@@ -36,14 +59,7 @@ namespace NorenRestSample
 
             nApi.SendLogin(Program.OnResponse, endPoint, loginMessage);
 
-            Console.Read();
-            string feedws = "ws://kurma.kambala.co.in:9655/NorenStream/NorenWS";
-            
-
-            nApi.AddFeedDevice(feedws);
-
-            nApi.SubscribeToken("NSE", "NIFTY");
-            nApi.SubscribeToken("NSE", "22");
+           
             
             
             
