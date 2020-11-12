@@ -17,14 +17,16 @@ namespace NorenRestApiWrapper
     }
     public class NorenApiResponse<T> :  BaseApiResponse where T : NorenResponseMsg, new()
     {
-        //call the delegate for those interested
+        //watchers interested in the response
         public delegate void ResponseNotify(NorenResponseMsg httpResponse); // declare a delegate  
         public ResponseNotify ResponseNotifyInstance; // create a delegate instance  
+        //the handler who will process the response
+        OnResponse ResponseHandler;
+
         public NorenApiResponse(OnResponse Response)
         {
-            onResponse = Response;
+            ResponseHandler = Response;
         }
-        OnResponse onResponse;
         public override void OnMessageNotify(HttpResponseMessage httpResponse, string data)
         {
             //T Message = Helpers.ToObject<T>(PayLoad);
@@ -45,12 +47,12 @@ namespace NorenRestApiWrapper
                     return;
                 }
                 ResponseNotifyInstance?.Invoke(Message);
-                onResponse(Message, true);
+                ResponseHandler(Message, true);
             }
             else
             {
                 Message.stat = data;
-                onResponse(Message, false);
+                ResponseHandler(Message, false);
             }
 
             

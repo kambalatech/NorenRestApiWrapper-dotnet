@@ -1,22 +1,24 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Websocket.Client;
+using System.Security.Cryptography;
 
 namespace NorenRestApiWrapper
 {
-    public delegate void OnFeed(NorenWSMessage Feed);
+    public delegate void OnFeed(NorenFeed Feed);
+    public delegate void OnOrderFeed(NorenOrderFeed Feed);
+    public delegate void OnStreamConnect(NorenStreamMessage msg);
     public class NorenRestApi
     {
         RESTClient rClient;
         WebsocketClient wsclient;
         bool loggedin;
-        LoginRespMessage loginResp;
+        LoginResponse loginResp;
         LoginMessage loginReq;
         public OnFeed OnFeedCallback;
+        public OnOrderFeed OnOrderCallback;
+        public OnStreamConnect onStreamConnectCallback;
         public NorenRestApi()
         {            
             rClient = new RESTClient();            
@@ -29,31 +31,68 @@ namespace NorenRestApiWrapper
                 return "jKey=" + loginResp?.susertoken;
             }
         }
-        public void OnFeedHandler(ResponseMessage msg)
+        #region response handlers
+        public void OnWSHandler(ResponseMessage msg)
         {
-            NorenFeed feedmsg;
+            NorenStreamMessage wsmsg;
             try
             {
-                feedmsg = JsonConvert.DeserializeObject<NorenFeed>(msg.Text);
+                wsmsg = JsonConvert.DeserializeObject<NorenStreamMessage>(msg.Text);
+                if(wsmsg.t =="ck")
+                {
+                    onStreamConnectCallback?.Invoke(wsmsg);
+                }
+                else if (wsmsg.t == "om" || wsmsg.t == "ok")
+                {
+                    NorenOrderFeed ordermsg = JsonConvert.DeserializeObject<NorenOrderFeed>(msg.Text);
+                    OnOrderCallback?.Invoke(ordermsg);
+                }
+                else
+                { 
+                    NorenFeed feedmsg = JsonConvert.DeserializeObject<NorenFeed>(msg.Text);
+                    OnFeedCallback?.Invoke(feedmsg);
+                }
             }
             catch (JsonReaderException ex)
             {
                 Console.WriteLine($"Error deserializing data {ex.ToString()}");
                 return;
             }
-            Console.WriteLine($"Feed received: {msg}");
-            //OnFeedCallback?.Invoke(null);
+            
+            //
         }
         public void OnLoginResponseNotify(NorenResponseMsg responseMsg)
         {
-            loginResp = responseMsg as LoginRespMessage;
+            loginResp = responseMsg as LoginResponse;
         }
+        #endregion
+        #region helpers
+        string ComputeSha256Hash(string rawData)
+        {
+            // Create a SHA256   
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                // ComputeHash - returns byte array  
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+                // Convert byte array to a string   
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+        #endregion
+        #region user login/logout
         public bool SendLogin(OnResponse response, string endPoint,LoginMessage login)
         {
             loginReq = login;
+            login.pwd = ComputeSha256Hash(login.pwd);
             rClient.endPoint = endPoint;
             string uri = "QuickAuth";
-            var ResponseHandler = new NorenApiResponse<LoginRespMessage>(response);
+            var ResponseHandler = new NorenApiResponse<LoginResponse>(response);
             ResponseHandler.ResponseNotifyInstance += OnLoginResponseNotify;
 
 
@@ -70,23 +109,107 @@ namespace NorenRestApiWrapper
             logout.uid = loginReq.uid;
             
             string uri = "Logout";
-            var ResponseHandler = new NorenApiResponse<LogoutRespMessage>(response);
+            var ResponseHandler = new NorenApiResponse<LogoutResponse>(response);
             rClient.makeRequest(ResponseHandler, uri, logout.toJson(), getJKey);
             return true;
         }
 
+        public bool Changepwd(OnResponse response, Changepwd changepwd)
+        {
+            if (loginResp == null)
+                return false;
+
+            
+            changepwd.uid = loginReq.uid;
+            changepwd.oldpwd = ComputeSha256Hash(changepwd.oldpwd);
+            string uri = "Changepwd";
+            var ResponseHandler = new NorenApiResponse<LogoutResponse>(response);
+            rClient.makeRequest(ResponseHandler, uri, changepwd.toJson());
+            return true;
+        }
+
+        #endregion
         public bool SendGetUserDetails(OnResponse response)
         {
             if (loginResp == null)
                 return false;
 
-            UserDetailsMessage userDetails = new UserDetailsMessage();
+            UserDetails userDetails = new UserDetails();
             userDetails.uid  = loginReq.uid;
             string uri = "UserDetails";
             
-            rClient.makeRequest(new NorenApiResponse<UserDetailsRespMessage>(response), uri, userDetails.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponse<UserDetailsResponse>(response), uri, userDetails.toJson(), getJKey);
             return true;
         }
+        public bool SendGetMWList(OnResponse response)
+        {
+            if (loginResp == null)
+                return false;
+
+            UserDetails userDetails = new UserDetails();
+            userDetails.uid = loginReq.uid;
+            string uri = "MWList";
+
+            rClient.makeRequest(new NorenApiResponse<MWListResponse>(response), uri, userDetails.toJson(), getJKey);
+            return true;
+        }
+        public bool SendSearchScrip(OnResponse response, string exch, string searchtxt)
+        {
+            if (loginResp == null)
+                return false;
+
+            SearchScrip searchScrip = new SearchScrip();
+            searchScrip.uid = loginReq.uid;
+            searchScrip.exch = exch;
+            searchScrip.stext = searchtxt;
+            string uri = "SearchScrip";
+
+            rClient.makeRequest(new NorenApiResponse<SearchScripResponse>(response), uri, searchScrip.toJson(), getJKey);
+            return true;
+        }
+        
+        public bool SendAddMultiScripsToMW(OnResponse response, string watchlist, string scrips)
+        {
+            if (loginResp == null)
+                return false;
+
+            AddMultiScripsToMW addMultiScripsToMW = new AddMultiScripsToMW();
+            addMultiScripsToMW.uid  = loginReq.uid;
+            addMultiScripsToMW.wlname = watchlist;
+            addMultiScripsToMW.scrips = scrips;
+            string uri = "AddMultiScripsToMW";
+
+            rClient.makeRequest(new NorenApiResponse<StandardResponse>(response), uri, addMultiScripsToMW.toJson(), getJKey);
+            return true;
+        }
+        public bool SendDeleteMultiMWScrips(OnResponse response, string watchlist, string scrips)
+        {
+            if (loginResp == null)
+                return false;
+
+            AddMultiScripsToMW addMultiScripsToMW = new AddMultiScripsToMW();
+            addMultiScripsToMW.uid = loginReq.uid;
+            addMultiScripsToMW.wlname = watchlist;
+            addMultiScripsToMW.scrips = scrips;
+            string uri = "DeleteMultiMWScrips";
+
+            rClient.makeRequest(new NorenApiResponse<StandardResponse>(response), uri, addMultiScripsToMW.toJson(), getJKey);
+            return true;
+        }
+        #region order methods
+        public bool SendPlaceOrder(OnResponse response ,PlaceOrder order)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "PlaceOrder";
+
+            rClient.makeRequest(new NorenApiResponse<PlaceOrderResponse>(response), uri, order.toJson(), getJKey);
+            return true;
+        }
+        #endregion
+
+        #region feed methods
         public bool AddFeedDevice(string uri, OnFeed handler)
         {
             var url = new Uri(uri);
@@ -104,9 +227,10 @@ namespace NorenRestApiWrapper
             connect.actid = loginReq.uid;
             connect.susertoken = loginResp?.susertoken;
 
-            wsclient.MessageReceived.Subscribe(msg => OnFeedHandler(msg));
+            wsclient.MessageReceived.Subscribe(msg => OnWSHandler(msg));
             wsclient.Start();
             wsclient.Send(connect.toJson());
+            Console.WriteLine($"Add Feed Device: {connect.toJson()}");
             return true;
         }
 
@@ -117,7 +241,22 @@ namespace NorenRestApiWrapper
             subs.k = exch + "|" + token;
 
             wsclient.Send(subs.toJson());
+            Console.WriteLine($"Sub Token: {subs.toJson()}");
             return true;
         }
+
+
+        public bool SubscribeOrders(OnOrderFeed orderFeed, string account)
+        {
+            OnOrderCallback = orderFeed;
+            OrderSubscribeMessage orderSubscribe = new OrderSubscribeMessage();
+            orderSubscribe.actid = account;
+            wsclient.Send(orderSubscribe.toJson());
+
+            Console.WriteLine($"Sub Order: {orderSubscribe.toJson()}");
+            return true;
+        }
+        #endregion
+        
     }
 }
