@@ -282,8 +282,50 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponse<TradeBookResponse>(response), uri, tradebook.toJson(), getJKey);
             return true;
         }
-        #endregion
+        public bool SendGetPositionBook(OnResponse response, PositionBook positionBook)
+        {
+            if (loginResp == null)
+                return false;
 
+            string uri = "PositionBook";
+
+            rClient.makeRequest(new NorenApiResponse<PositionBookResponse>(response), uri, positionBook.toJson(), getJKey);
+            return true;
+        }
+        public bool SendGetHoldings(OnResponse response, Holdings holdings)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "Holdings";
+
+            rClient.makeRequest(new NorenApiResponse<HoldingsResponse>(response), uri, holdings.toJson(), getJKey);
+            return true;
+        }
+        public bool SendGetLimits(OnResponse response, Limits limits)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "Limits";
+
+            rClient.makeRequest(new NorenApiResponse<LimitsResponse>(response), uri, limits.toJson(), getJKey);
+            return true;
+        }
+
+        #endregion
+        #region others
+        public bool SendGetExchMsg(OnResponse response, ExchMsg exchmsg)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "ExchMsg";
+
+            rClient.makeRequest(new NorenApiResponse<ExchMsgResponse>(response), uri, exchmsg.toJson(), getJKey);
+            return true;
+        }
+        #endregion
         #region feed methods
         public bool AddFeedDevice(string uri, OnFeed handler)
         {

@@ -10,16 +10,13 @@ namespace NorenRestSample
 {
     class Program
     {
-        //cred
+        #region credentials
         public static string uid = "MOBKUMAR";
         public static string pwd = "Qaws@12345";
         public static string pan = "AAAA45AAAA";
-        //public static string uid = "GURURAJ";
-        //public static string pwd = "Qaws@123";
-        //public static string pan = "AAAAA1234A";
-        //in case pwd is expired
+        
         public static string newpwd = "Qaws@123456";
-
+        #endregion
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
         {
             //do all work here
@@ -40,9 +37,9 @@ namespace NorenRestSample
                 return;
             }
             //login is ok                
-            //nApi.SendGetUserDetails(Program.OnResponseNOP);
+            nApi.SendGetUserDetails(Program.OnResponseNOP);
 
-           // nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "REL");
+            nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
             //add the feed device
             string feedws = "ws://kurma.kambala.co.in:9655/NorenStream/NorenWS";
             nApi.onStreamConnectCallback = Program.OnStreamConnect;

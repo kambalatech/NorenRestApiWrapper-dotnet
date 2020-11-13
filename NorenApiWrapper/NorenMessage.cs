@@ -228,9 +228,19 @@ namespace NorenRestApiWrapper
         public string stext;
         public string exch;
     }
+    public class ScripItem
+    {
+        public string exch;
+        public string tsym;
+        public string token;
+        public string pp;
+        public string ti;
+        public string ls;
+    }
+
     public class SearchScripResponse : NorenResponseMsg
     {
-        public List<string> values;
+        public List<ScripItem> values;
         public string request_time;
         public string emsg;
     }
@@ -437,10 +447,205 @@ namespace NorenRestApiWrapper
         public string request_time;
         public string emsg;
     }
-
     public class ExchMsg : NorenMessage
     {
+        public string uid;
+        public string exch;
+    }
+
+    public class ExchMsgResponse : StandardResponse
+    {
+        public string exchmsg;
+        public string exchtm;
+    }
+    public class PositionBook : NorenMessage
+    {
+        public string uid;
+        public string actid;
+    }
+
+    public class PositionBookResponse : StandardResponse
+    {
+        public string exch;
+        public string tsym;
+        public string token;
+        public string uid;
+        public string actid;
+        public string prd;
+        public string netqty;
+        public string netavgprc;
+        public string daybuyqty;
+        public string daysellqty;
+        public string daybuyavgprc;
+        public string daysellavgprc;
+        public string daybuyamt;
+        public string daysellamt;
+        public string cfbuyqty;
+        public string cforgavgprc;
+        public string cfsellqty;
+        public string cfbuyavgprc;
+        public string cfsellavgprc;
+        public string cfbuyamt;
+        public string cfsellamt;
+        public string lp;
+        public string rpnl;
+        public string urmtom;
+        public string bep;
+        public string openbuyqty;
+        public string opensellqty;
+        public string openbuyamt;
+        public string opensellamt;
+        public string openbuyavgprc;
+        public string opensellavgprc;
+        public string mult;
+        public string pp;
+        public string prcftr;
+        public string ti;
+        public string ls;        
+    }
+    public class Holdings : NorenMessage
+    {
+        public string uid;
+        public string actid;
+        public string prd;
+    }
+    public class HoldingsItem
+    {
+        public List<ScripItem> exch_tsym;
+        public string holdqty;
+        public string colqty;
+        public string btstqty;
+        public string btstcolqty;
+        public string usedqty;
 
     }
+    public class HoldingsResponse : StandardResponse
+    {
+        public List<ScripItem> values;
+    }
+    public class Limits : NorenMessage
+    {
+        public string uid;
+        public string actid;
+        public string prd;
+        public string seg;
+        public string exch;
+    }
+    public class LimitsResponse : StandardResponse
+    {
+        public string actid;
+        public string prd;
+        public string seg;
+        public string exch;
+        //-------------------------Cash Primary Fields-------------------------------
+        public string cash;
+        public string payin;
+        public string payout;
+        //-------------------------Cash Additional Fields-------------------------------
+        public string brkcollamt;
+        public string unclearedcash;
+        public string daycash;
+        //-------------------------Margin Utilized----------------------------------
+        public string marginused;
+        public string mtomcurper;
+        //-------------------------Margin Used components---------------------
+        public string cbu;
+        public string csc;
+        public string rpnl;
+        public string unmtom;
+        public string marprt;
+        public string span;
+        public string expo;
+        public string premium;
+        public string varelm;
+        public string grexpo;
+        public string greexpo_d;
+        public string scripbskmar;
+        public string addscripbskmrg;
+        public string brokerage;
+        public string collateral;
+        public string grcoll;
+        //-------------------------Additional Risk Limits---------------------------
+        public string turnoverlmt;
+        public string pendordvallmt;
+        //-------------------------Additional Risk Indicators---------------------------
+        public string turnover;
+        public string pendordval;
+        //-------------------------Margin used detailed breakup fields-------------------------
+        public string rzpnl_e_i;
+        public string rzpnl_e_m;
+        public string rzpnl_e_c;
+        public string rzpnl_d_i;
+        public string rzpnl_d_m;
+        public string rzpnl_f_i;
+        public string rzpnl_f_m;
+        public string rzpnl_c_i;
+        public string rzpnl_c_m;
+        public string uzpnl_e_i;
+        public string uzpnl_e_m;
+        public string uzpnl_e_c;
+        public string uzpnl_d_i;
+        public string uzpnl_d_m;
+        public string uzpnl_f_i;
+        public string uzpnl_f_m;
+        public string uzpnl_c_i;
+        public string uzpnl_c_m;
+        public string span_d_i;
+        public string span_d_m;
+        public string span_f_i;
+        public string span_f_m;
+        public string span_c_i;
+        public string span_c_m;
+        public string expo_d_i;
+        public string expo_d_m;
+        public string expo_f_i;
+        public string expo_f_m;
+        public string expo_c_i;
+        public string expo_c_m;
+        public string premium_d_i;
+        public string premium_d_m;
+        public string premium_f_i;
+        public string premium_f_m;
+        public string premium_c_i;
+        public string premium_c_m;
+        public string varelm_e_i;
+        public string varelm_e_m;
+        public string varelm_e_c;
+        public string marprt_e_h;
+        public string marprt_e_b;
+        public string marprt_d_h;
+        public string marprt_d_b;
+        public string marprt_f_h;
+        public string marprt_f_b;
+        public string marprt_c_h;
+        public string marprt_c_b;
+        public string scripbskmar_e_i;
+        public string scripbskmar_e_m;
+        public string scripbskmar_e_c;
+        public string addscripbskmrg_d_i;
+        public string addscripbskmrg_d_m;
+        public string addscripbskmrg_f_i;
+        public string addscripbskmrg_f_m;
+        public string addscripbskmrg_c_i;
+        public string addscripbskmrg_c_m;
+        public string brkage_e_i;
+        public string brkage_e_m;
+        public string brkage_e_c;
+        public string brkage_e_h;
+        public string brkage_e_b;
+        public string brkage_d_i;
+        public string brkage_d_m;
+        public string brkage_d_h;
+        public string brkage_d_b;
+        public string brkage_f_i;
+        public string brkage_f_m;
+        public string brkage_f_h;
+        public string brkage_f_b;
+        public string brkage_c_i;
+        public string brkage_c_m;
+        public string brkage_c_h;
+        public string brkage_c_b;
+    }
+
 
 }
