@@ -6,8 +6,20 @@ using System.Security.Cryptography;
 
 namespace NorenRestApiWrapper
 {
+    /// <summary>
+    /// Callback when feed is received
+    /// </summary>
+    /// <param name="Feed"></param>
     public delegate void OnFeed(NorenFeed Feed);
+    /// <summary>
+    /// callback when order updates are received
+    /// </summary>
+    /// <param name="Feed"></param>
     public delegate void OnOrderFeed(NorenOrderFeed Feed);
+    /// <summary>
+    /// only after this call back feed and orders are to be subscribed
+    /// </summary>
+    /// <param name="msg"></param>
     public delegate void OnStreamConnect(NorenStreamMessage msg);
     public class NorenRestApi
     {
@@ -32,7 +44,7 @@ namespace NorenRestApiWrapper
             }
         }
         #region response handlers
-        public void OnWSHandler(ResponseMessage msg)
+        private void OnWSHandler(ResponseMessage msg)
         {
             NorenStreamMessage wsmsg;
             try
@@ -61,7 +73,7 @@ namespace NorenRestApiWrapper
             
             //
         }
-        public void OnLoginResponseNotify(NorenResponseMsg responseMsg)
+        internal void OnLoginResponseNotify(NorenResponseMsg responseMsg)
         {
             loginResp = responseMsg as LoginResponse;
         }
@@ -86,6 +98,13 @@ namespace NorenRestApiWrapper
         }
         #endregion
         #region user login/logout
+        /// <summary>
+        /// This should be the first request. No further requests to be sent before login success
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="endPoint"></param>
+        /// <param name="login"></param>
+        /// <returns></returns>
         public bool SendLogin(OnResponse response, string endPoint,LoginMessage login)
         {
             loginReq = login;
@@ -99,7 +118,11 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(ResponseHandler, uri, login.toJson());
             return true;
         }
-
+        /// <summary>
+        /// Logout the current user
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
         public bool SendLogout(OnResponse response)
         {
             if (loginResp == null)
@@ -207,6 +230,58 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponse<PlaceOrderResponse>(response), uri, order.toJson(), getJKey);
             return true;
         }
+        public bool SendModifyOrder(OnResponse response, ModifyOrder order)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "ModifyOrder";
+
+            rClient.makeRequest(new NorenApiResponse<ModifyOrderResponse>(response), uri, order.toJson(), getJKey);
+            return true;            
+        }
+        public bool SendCancelOrder(OnResponse response, CancelOrder order)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "CancelOrder";
+
+            rClient.makeRequest(new NorenApiResponse<CancelOrderResponse>(response), uri, order.toJson(), getJKey);
+            return true;
+        }
+
+        public bool SendGetOrderBook(OnResponse response, OrderBook orderbook)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "OrderBook";
+
+            rClient.makeRequest(new NorenApiResponse<OrderBookResponse>(response), uri, orderbook.toJson(), getJKey);
+            return true;
+        }
+
+        public bool SendGetMultiLegOrderBook(OnResponse response, MultiLegOrderBook mlorderbook)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "MultiLegOrderBook";
+
+            rClient.makeRequest(new NorenApiResponse<MultiLegOrderBookResponse>(response), uri, mlorderbook.toJson(), getJKey);
+            return true;
+        }
+        public bool SendGetTradeBook(OnResponse response, TradeBook tradebook)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "TradeBook";
+
+            rClient.makeRequest(new NorenApiResponse<TradeBookResponse>(response), uri, tradebook.toJson(), getJKey);
+            return true;
+        }
         #endregion
 
         #region feed methods
@@ -233,7 +308,12 @@ namespace NorenRestApiWrapper
             Console.WriteLine($"Add Feed Device: {connect.toJson()}");
             return true;
         }
-
+        /// <summary>
+        /// Subscribes to the token of interest
+        /// </summary>
+        /// <param name="exch"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public bool SubscribeToken(string exch, string token)
         {
             SubsTouchline subs = new SubsTouchline();

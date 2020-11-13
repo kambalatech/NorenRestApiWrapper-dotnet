@@ -277,4 +277,170 @@ namespace NorenRestApiWrapper
         public string emsg;
         public string norenordno;
     }
+    public class ModifyOrder : NorenMessage
+    {
+        public string exch;
+        public string norenordno;
+        public string prctyp;
+        public string prc;
+        public string qty;
+        public string tsym;
+        public string ret;
+        public string trgprc;
+        public string uid;
+        public string bpprc;
+        public string blprc;
+        public string trailprc;
+    }
+    public class ModifyOrderResponse : NorenResponseMsg
+    {
+        public string request_time;
+        public string emsg;
+        public string norenordno;
+    }
+    public class CancelOrder : NorenMessage
+    {
+        public string norenordno;
+        public string uid;        
+    }
+    public class CancelOrderResponse : NorenResponseMsg
+    {
+        public string request_time;
+        public string emsg;
+        public string norenordno;
+    }
+
+    public class OrderBook : NorenMessage
+    {
+        public string uid;
+        public string prd;
+    }
+    public class OrderBookResponse : NorenResponseMsg
+    {
+        public string exch;
+        public string tsym;
+        public string norenordno;
+        public string prc;
+        public string qty;
+        public string prd;
+        public string status;
+        public string trantype;
+        public string prctyp;
+        public string fillshares;
+        public string avgprc;
+        public string rejreason;
+        public string exchordid;
+        public string cancelqty;
+        public string remarks;
+        public string dscqty;
+        public string trgprc;
+        public string ret;
+        public string uid;
+        public string actid;
+        public string bpprc;
+        public string blprc;
+        public string trailprc;
+        public string amo;
+        public string pp;
+        public string ti;
+        public string ls;
+        public string token;
+        public string orddttm;
+        public string ordenttm;
+        public string extm;
+        public string request_time;
+        public string emsg;
+    }
+    public class MultiLegOrderBook : NorenMessage
+    {
+        public string uid;
+        public string prd;
+    }
+
+    public class MultiLegOrderBookResponse : NorenResponseMsg
+    {
+        public string exch;
+        public string tsym;
+        public string norenordno;
+        public string prc;
+        public string qty;
+        public string prd;
+        public string status;
+        public string trantype;
+        public string prctyp;
+        public string fillshares;
+        public string avgprc;
+        public string rejreason;
+        public string exchordid;
+        public string cancelqty;
+        public string remarks;
+        public string dscqty;
+        public string trgprc;
+        public string ret;
+        public string uid;
+        public string actid;
+        public string bpprc;
+        public string blprc;
+        public string trailprc;
+        public string amo;
+        public string pp;
+        public string ti;
+        public string ls;
+        public string tsym2;
+        public string trantype2;
+        public string qty2;
+        public string prc2;
+        public string tsym3;
+        public string trantype3;
+        public string qty3;
+        public string prc3;
+        public string fillshares2;
+        public string avgprc2;
+        public string fillshares3;
+        public string avgprc3;
+        public string request_time;
+        public string emsg;
+    }
+
+    public class TradeBook : NorenMessage
+    {
+        public string uid;
+        public string prd;
+    }
+    public class TradeBookResponse : NorenResponseMsg
+    {
+        public string exch;
+        public string tsym;
+        public string norenordno;
+        public string qty;
+        public string prd;
+        public string trantype;
+        public string prctyp;
+        public string fillshares;
+        public string avgprc;
+        public string exchordid;
+        public string remarks;
+        public string ret;
+        public string uid;
+        public string actid;
+        public string pp;
+        public string ti;
+        public string ls;
+        public string cstFrm;
+        public string fldttm;
+        public string flid;
+        public string flleg;
+        public string flqty;
+        public string flprc;
+        public string ordersource;
+        public string token;
+        public string request_time;
+        public string emsg;
+    }
+
+    public class ExchMsg : NorenMessage
+    {
+
+    }
+
 }
