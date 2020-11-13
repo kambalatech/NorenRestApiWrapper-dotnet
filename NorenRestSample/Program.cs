@@ -37,13 +37,31 @@ namespace NorenRestSample
                 return;
             }
             //login is ok                
-            nApi.SendGetUserDetails(Program.OnResponseNOP);
+            //nApi.SendGetUserDetails(Program.OnResponseNOP);
+            //
+            PlaceOrder order = new PlaceOrder();
+            order.uid = uid;
+            order.actid = "ACCT1";
+            order.exch = "NSE";
+            order.tsym = "INFY-EQ";
+            order.qty = "10";
+            order.dscqty = "0";
+            order.prc = "200000";
+            order.prd = "M";
+            order.trantype = "B";
+            order.prctyp = "LMT";
+            order.ret = "DAY";
+            order.ordersource = "MOB";
+            
 
-            nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
+
+            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+
+            //nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
             //add the feed device
             string feedws = "ws://kurma.kambala.co.in:9655/NorenStream/NorenWS";
             nApi.onStreamConnectCallback = Program.OnStreamConnect;
-            nApi.AddFeedDevice(feedws, Program.OnFeed);
+            //nApi.AddFeedDevice(feedws, Program.OnFeed);
             
         }
 

@@ -15,7 +15,7 @@ namespace NorenRestApiWrapper
         public string stat;
         public virtual string toJson()
         {
-            string json = JsonConvert.SerializeObject(this);
+            string json = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
 
             return json;
         }
@@ -24,7 +24,7 @@ namespace NorenRestApiWrapper
     {
         public virtual string toJson()
         {
-            string json = JsonConvert.SerializeObject(this);
+            string json = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
             string prefix = "jData=";
             return prefix + json;
         }
@@ -35,7 +35,7 @@ namespace NorenRestApiWrapper
         public string t;
         public virtual string toJson()
         {
-            string json = JsonConvert.SerializeObject(this);
+            string json = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
             Debug.WriteLine(json);
             return json;
         }
