@@ -270,9 +270,9 @@ namespace NorenRestApiWrapper
                 return false;
 
             string uri = "MultiLegOrderBook";
-            MultiLegOrderBook orderbook = new MultiLegOrderBook();
-            orderbook.uid = loginReq.uid;
-            orderbook.prd = product;
+            MultiLegOrderBook mlorderbook = new MultiLegOrderBook();
+            mlorderbook.uid = loginReq.uid;
+            mlorderbook.prd = product;
 
             rClient.makeRequest(new NorenApiResponse<MultiLegOrderBookResponse>(response), uri, mlorderbook.toJson(), getJKey);
             return true;
