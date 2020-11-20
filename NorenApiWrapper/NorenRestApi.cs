@@ -251,53 +251,67 @@ namespace NorenRestApiWrapper
             return true;
         }
 
-        public bool SendGetOrderBook(OnResponse response, OrderBook orderbook)
+        public bool SendGetOrderBook(OnResponse response, string product)
         {
             if (loginResp == null)
                 return false;
 
             string uri = "OrderBook";
-
+            OrderBook orderbook = new OrderBook();
+            orderbook.uid = loginReq.uid;
+            orderbook.prd = product;
             rClient.makeRequest(new NorenApiResponse<OrderBookResponse>(response), uri, orderbook.toJson(), getJKey);
             return true;
         }
 
-        public bool SendGetMultiLegOrderBook(OnResponse response, MultiLegOrderBook mlorderbook)
+        public bool SendGetMultiLegOrderBook(OnResponse response, string product)
         {
             if (loginResp == null)
                 return false;
 
             string uri = "MultiLegOrderBook";
+            MultiLegOrderBook orderbook = new MultiLegOrderBook();
+            orderbook.uid = loginReq.uid;
+            orderbook.prd = product;
 
             rClient.makeRequest(new NorenApiResponse<MultiLegOrderBookResponse>(response), uri, mlorderbook.toJson(), getJKey);
             return true;
         }
-        public bool SendGetTradeBook(OnResponse response, TradeBook tradebook)
+        public bool SendGetTradeBook(OnResponse response, string product)
         {
             if (loginResp == null)
                 return false;
 
             string uri = "TradeBook";
+            TradeBook tradebook = new TradeBook();
+            tradebook.uid = loginReq.uid;
+            tradebook.prd = product;
 
             rClient.makeRequest(new NorenApiResponse<TradeBookResponse>(response), uri, tradebook.toJson(), getJKey);
             return true;
         }
-        public bool SendGetPositionBook(OnResponse response, PositionBook positionBook)
+        public bool SendGetPositionBook(OnResponse response, string account)
         {
             if (loginResp == null)
                 return false;
 
             string uri = "PositionBook";
+            PositionBook positionBook = new PositionBook();
+            positionBook.uid   = loginReq.uid;
+            positionBook.actid = account;
 
             rClient.makeRequest(new NorenApiResponse<PositionBookResponse>(response), uri, positionBook.toJson(), getJKey);
             return true;
         }
-        public bool SendGetHoldings(OnResponse response, Holdings holdings)
+        public bool SendGetHoldings(OnResponse response, string account, string product)
         {
             if (loginResp == null)
                 return false;
 
             string uri = "Holdings";
+            Holdings holdings = new Holdings();
+            holdings.actid = account;
+            holdings.prd = product;
 
             rClient.makeRequest(new NorenApiResponse<HoldingsResponse>(response), uri, holdings.toJson(), getJKey);
             return true;
