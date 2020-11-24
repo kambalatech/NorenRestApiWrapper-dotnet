@@ -35,8 +35,6 @@ namespace NorenRestApiWrapper
 
         }
 
-
-
         public async void makeRequest(BaseApiResponse response,string uri, string message, string key = null)
         {
             
@@ -67,8 +65,7 @@ namespace NorenRestApiWrapper
                       data = await responseTask.Result.Content.ReadAsStringAsync();
 
                       Console.WriteLine("Response data: {0}", data);
-                      response.OnMessageNotify(responseTask.Result, data);
-                      
+                      response.OnMessageNotify(responseTask.Result, data);                      
 
                   });
             

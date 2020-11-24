@@ -260,7 +260,7 @@ namespace NorenRestApiWrapper
             OrderBook orderbook = new OrderBook();
             orderbook.uid = loginReq.uid;
             orderbook.prd = product;
-            rClient.makeRequest(new NorenApiResponse<OrderBookResponse>(response), uri, orderbook.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponseList<OrderBookResponse, OrderBookItem>(response), uri, orderbook.toJson(), getJKey);
             return true;
         }
 
@@ -274,7 +274,7 @@ namespace NorenRestApiWrapper
             mlorderbook.uid = loginReq.uid;
             mlorderbook.prd = product;
 
-            rClient.makeRequest(new NorenApiResponse<MultiLegOrderBookResponse>(response), uri, mlorderbook.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponseList<MultiLegOrderBookResponse, MultiLegOrderBookItem>(response), uri, mlorderbook.toJson(), getJKey);
             return true;
         }
         public bool SendGetTradeBook(OnResponse response, string product)
@@ -287,7 +287,7 @@ namespace NorenRestApiWrapper
             tradebook.uid = loginReq.uid;
             tradebook.prd = product;
 
-            rClient.makeRequest(new NorenApiResponse<TradeBookResponse>(response), uri, tradebook.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponseList<TradeBookResponse, TradeBookItem>(response), uri, tradebook.toJson(), getJKey);
             return true;
         }
         public bool SendGetPositionBook(OnResponse response, string account)
@@ -300,7 +300,7 @@ namespace NorenRestApiWrapper
             positionBook.uid   = loginReq.uid;
             positionBook.actid = account;
 
-            rClient.makeRequest(new NorenApiResponse<PositionBookResponse>(response), uri, positionBook.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponseList<PositionBookResponse, PositionBookItem>(response), uri, positionBook.toJson(), getJKey);
             return true;
         }
         public bool SendGetHoldings(OnResponse response, string account, string product)
@@ -336,7 +336,7 @@ namespace NorenRestApiWrapper
 
             string uri = "ExchMsg";
 
-            rClient.makeRequest(new NorenApiResponse<ExchMsgResponse>(response), uri, exchmsg.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponseList<ExchMsgResponse, ExchMsgItem>(response), uri, exchmsg.toJson(), getJKey);
             return true;
         }
         #endregion

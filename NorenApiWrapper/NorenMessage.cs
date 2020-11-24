@@ -29,6 +29,15 @@ namespace NorenRestApiWrapper
             return prefix + json;
         }
     }
+    public class NorenListResponseMsg<T> : StandardResponse
+    {
+        public NorenListResponseMsg()
+        {
+            list = new List<T>();
+        }
+
+        public List<T> list;
+    }
     #region WebSocket Stream Messages
     public class NorenStreamMessage
     {
@@ -325,7 +334,7 @@ namespace NorenRestApiWrapper
         public string uid;
         public string prd;
     }
-    public class OrderBookResponse : NorenResponseMsg
+    public class OrderBookItem 
     {
         public string exch;
         public string tsym;
@@ -361,13 +370,22 @@ namespace NorenRestApiWrapper
         public string request_time;
         public string emsg;
     }
+    public class OrderBookResponse : NorenListResponseMsg<OrderBookItem>
+    {
+        public List<OrderBookItem> Orders => list;      
+
+    }
     public class MultiLegOrderBook : NorenMessage
     {
         public string uid;
         public string prd;
     }
 
-    public class MultiLegOrderBookResponse : NorenResponseMsg
+    public class MultiLegOrderBookResponse : NorenListResponseMsg<MultiLegOrderBookItem>
+    {
+        public List<MultiLegOrderBookItem> mlorders =>list;
+    }
+    public class MultiLegOrderBookItem
     {
         public string exch;
         public string tsym;
@@ -417,7 +435,13 @@ namespace NorenRestApiWrapper
         public string uid;
         public string prd;
     }
-    public class TradeBookResponse : NorenResponseMsg
+    
+
+    public class TradeBookResponse : NorenListResponseMsg<TradeBookItem>
+    {
+        public List<TradeBookItem> trades =>list;
+    }
+    public class TradeBookItem
     {
         public string exch;
         public string tsym;
@@ -451,9 +475,13 @@ namespace NorenRestApiWrapper
     {
         public string uid;
         public string exch;
-    }
+    }   
 
-    public class ExchMsgResponse : StandardResponse
+    public class ExchMsgResponse : NorenListResponseMsg<ExchMsgItem>
+    {
+        public List<ExchMsgItem> messages => list;
+    }
+    public class ExchMsgItem
     {
         public string exchmsg;
         public string exchtm;
@@ -464,7 +492,11 @@ namespace NorenRestApiWrapper
         public string actid;
     }
 
-    public class PositionBookResponse : StandardResponse
+    public class PositionBookResponse : NorenListResponseMsg<PositionBookItem>
+    {
+        public List<PositionBookItem> messages => list;
+    }
+    public class PositionBookItem
     {
         public string exch;
         public string tsym;
