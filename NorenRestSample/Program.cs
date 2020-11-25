@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using NorenRestApiWrapper;
@@ -37,8 +39,10 @@ namespace NorenRestSample
                 return;
             }
             //login is ok                
-            //nApi.SendGetUserDetails(Program.OnResponseNOP);
+            ///nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
             //
+            // send get order book
+            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
             PlaceOrder order = new PlaceOrder();
             order.uid = uid;
             order.actid = "ACCT1";
@@ -55,7 +59,7 @@ namespace NorenRestSample
             
 
 
-            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+           //// nApi.SendPlaceOrder(Program.OnResponseNOP, order);
 
             //nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
             //add the feed device
@@ -70,8 +74,8 @@ namespace NorenRestSample
             nApi.SubscribeOrders(Program.OnOrderUpdate, uid);
             nApi.SubscribeToken("NSE", "22");
         }
-        static NorenRestApi nApi = new NorenRestApi();        
-
+        static NorenRestApi nApi = new NorenRestApi();
+        
         static void Main(string[] args)
         {           
             string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
@@ -103,8 +107,21 @@ namespace NorenRestSample
             }
             
         }
+        public static void OnUserDetailsResponse(NorenResponseMsg Response, bool ok)
+        {
+            UserDetailsResponse userDetailsResponse = Response as UserDetailsResponse;
+            Console.WriteLine(userDetailsResponse.toJson());
+        }
         public static void OnResponseNOP(NorenResponseMsg Response, bool ok)
         {
+            
+            Console.WriteLine(Response.toJson());
+        }
+
+        public static void OnOrderBookResponse(NorenResponseMsg Response, bool ok)
+        {
+            OrderBookResponse orderBook = Response as OrderBookResponse;
+            
             Console.WriteLine(Response.toJson());
         }
         public static void OnFeed(NorenFeed Feed)

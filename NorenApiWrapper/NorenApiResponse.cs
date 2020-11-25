@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Net.Http;
 
@@ -41,6 +42,8 @@ namespace NorenRestApiWrapper
                 try
                 {
                     Message.list = JsonConvert.DeserializeObject<List<U>>(data);
+                    
+
                 }
                 catch (JsonReaderException ex)
                 {
@@ -86,20 +89,10 @@ namespace NorenRestApiWrapper
             if (httpResponse.IsSuccessStatusCode)
             {
                 try
-                {
-                    if (Message is NorenListResponseMsg<T>)
-                    {
-                        NorenListResponseMsg<T> Response = new NorenListResponseMsg<T>();
-                        Response.list = JsonConvert.DeserializeObject<List<T>>(data);
-                        ResponseNotifyInstance?.Invoke(Response);
-                        ResponseHandler(Response, true);
-                    }
-                    else
-                    {
-                        Message = JsonConvert.DeserializeObject<T>(data);
-                        ResponseNotifyInstance?.Invoke(Message);
-                        ResponseHandler(Message, true);
-                    }
+                {                    
+                    Message = JsonConvert.DeserializeObject<T>(data);
+                    ResponseNotifyInstance?.Invoke(Message);
+                    ResponseHandler(Message, true);                    
                 } 
                 catch(JsonReaderException  ex)
                 {
