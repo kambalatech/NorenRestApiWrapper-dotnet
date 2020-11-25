@@ -45,9 +45,9 @@ namespace NorenRestApiWrapper
                 DataTable dataTable = new DataTable(typeof(T).Name);
 
                 //Get all the properties
-                PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                FieldInfo[] Props = typeof(T).GetFields();
 
-                foreach (PropertyInfo prop in Props)
+                foreach (FieldInfo prop in Props)
                 {
                     //Setting column names as Property names
                     dataTable.Columns.Add(prop.Name);
@@ -60,7 +60,7 @@ namespace NorenRestApiWrapper
                     for (int i = 0; i < Props.Length; i++)
                     {
                         //inserting property values to datatable rows
-                        values[i] = Props[i].GetValue(item, null);
+                        values[i] = Props[i].GetValue(item);
                     }
 
                     dataTable.Rows.Add(values);

@@ -121,8 +121,20 @@ namespace NorenRestSample
         public static void OnOrderBookResponse(NorenResponseMsg Response, bool ok)
         {
             OrderBookResponse orderBook = Response as OrderBookResponse;
-            
-            Console.WriteLine(Response.toJson());
+            DataView dv = orderBook.dataView;
+
+            //    for (int i = 0; i < dv.Count; i++)
+            string order;
+            foreach (DataRow dataRow in dv.Table.Rows)
+            {
+                order = "order:";
+                foreach (var item in dataRow.ItemArray)
+                {
+                    order += item + " ,"; 
+                }
+                Console.WriteLine(order);
+            }
+            Console.WriteLine();
         }
         public static void OnFeed(NorenFeed Feed)
         {
