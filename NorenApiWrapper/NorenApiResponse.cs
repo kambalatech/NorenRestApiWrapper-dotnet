@@ -47,6 +47,7 @@ namespace NorenRestApiWrapper
                 }
                 catch (JsonReaderException ex)
                 {
+                    Console.WriteLine($"Message Received {data}");
                     Console.WriteLine($"Error deserializing data {ex.ToString()}");
                     return;
                 }

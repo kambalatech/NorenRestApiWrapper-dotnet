@@ -310,10 +310,11 @@ namespace NorenRestApiWrapper
 
             string uri = "Holdings";
             Holdings holdings = new Holdings();
+            holdings.uid = loginReq.uid;
             holdings.actid = account;
             holdings.prd = product;
 
-            rClient.makeRequest(new NorenApiResponse<HoldingsResponse>(response), uri, holdings.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponseList<HoldingsResponse, HoldingsItem>(response), uri, holdings.toJson(), getJKey);
             return true;
         }
         public bool SendGetLimits(OnResponse response, Limits limits)

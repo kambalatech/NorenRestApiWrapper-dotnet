@@ -530,7 +530,7 @@ namespace NorenRestApiWrapper
 
     public class PositionBookResponse : NorenListResponseMsg<PositionBookItem>
     {
-        public List<PositionBookItem> messages => list;
+        public List<PositionBookItem> positions => list;
     }
     public class PositionBookItem
     {
@@ -587,9 +587,9 @@ namespace NorenRestApiWrapper
         public string usedqty;
 
     }
-    public class HoldingsResponse : StandardResponse
+    public class HoldingsResponse : NorenListResponseMsg<HoldingsItem>
     {
-        public List<ScripItem> values;
+        public List<HoldingsItem> holdings => list;
     }
     public class Limits : NorenMessage
     {
