@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -10,14 +11,14 @@ using NorenRestApiWrapper;
 
 namespace NorenRestSample
 {
-    class Program
+    static class Program
     {
         #region credentials
         public static string uid = "MOBKUMAR";
-        public static string pwd = "Qaws@12345";
+        public static string pwd = "Qaws@123456";
         public static string pan = "AAAA45AAAA";
         
-        public static string newpwd = "Qaws@123456";
+        public static string newpwd = "Qaws@34567";
         #endregion
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
         {
@@ -39,10 +40,10 @@ namespace NorenRestSample
                 return;
             }
             //login is ok                
-            ///nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
+            //nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
             //
             // send get order book
-            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
+            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
             PlaceOrder order = new PlaceOrder();
             order.uid = uid;
             order.actid = "ACCT1";
@@ -56,8 +57,9 @@ namespace NorenRestSample
             order.prctyp = "LMT";
             order.ret = "DAY";
             order.ordersource = "MOB";
-            
 
+            ///
+            nApi.SendGetHoldings(Program.OnHoldingsResponse, "MOBKUMAR", "C");
 
            //// nApi.SendPlaceOrder(Program.OnResponseNOP, order);
 
@@ -104,8 +106,7 @@ namespace NorenRestSample
                 if (kp.Key == ConsoleKey.Q)
                     dontexit = false;
                 Console.WriteLine("Press q to exit.");
-            }
-            
+            }            
         }
         public static void OnUserDetailsResponse(NorenResponseMsg Response, bool ok)
         {
@@ -117,6 +118,31 @@ namespace NorenRestSample
             
             Console.WriteLine(Response.toJson());
         }
+        
+        public static void OnHoldingsResponse(NorenResponseMsg Response, bool ok)
+        {
+            HoldingsResponse holdingsResponse = Response as HoldingsResponse;
+
+            Console.WriteLine("Holdings Response:" + holdingsResponse.toJson());
+
+            
+            printDataView(holdingsResponse.dataView);
+        }
+
+        public static void printDataView(DataView dv)
+        {
+            string order;
+            foreach (DataRow dataRow in dv.Table.Rows)
+            {
+                order = "order:";
+                foreach (var item in dataRow.ItemArray)
+                {
+                    order += item + " ,";
+                }
+                Console.WriteLine(order);
+            }
+            Console.WriteLine();
+        }
 
         public static void OnOrderBookResponse(NorenResponseMsg Response, bool ok)
         {
@@ -124,17 +150,7 @@ namespace NorenRestSample
             DataView dv = orderBook.dataView;
 
             //    for (int i = 0; i < dv.Count; i++)
-            string order;
-            foreach (DataRow dataRow in dv.Table.Rows)
-            {
-                order = "order:";
-                foreach (var item in dataRow.ItemArray)
-                {
-                    order += item + " ,"; 
-                }
-                Console.WriteLine(order);
-            }
-            Console.WriteLine();
+            printDataView(dv);
         }
         public static void OnFeed(NorenFeed Feed)
         {

@@ -1,24 +1,29 @@
 ﻿using Newtonsoft.Json;
+using NorenApiWrapper;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
+using static NorenApiWrapper.NorenApiHelpers;
 namespace NorenRestApiWrapper
 {
-
     #region basetypes
     public class NorenResponseMsg
     {//all resapi messages will be returned here
         public string stat;
         public virtual string toJson()
         {
-            string json = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
-
+            string json = string.Empty;
+            try
+            { 
+                json = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            }
+            catch(JsonSerializationException ex)
+            {
+                Console.WriteLine($"Error deserializing data {ex.ToString()}");
+                return null;
+            }
             return json;
         }
     }
@@ -37,7 +42,8 @@ namespace NorenRestApiWrapper
         {
             list = new List<T>();
         }
-
+        
+        [JsonIgnore]
         public DataView dataView
         {
             get
@@ -585,11 +591,20 @@ namespace NorenRestApiWrapper
         public string btstqty;
         public string btstcolqty;
         public string usedqty;
-
+        public string upldprc;
     }
     public class HoldingsResponse : NorenListResponseMsg<HoldingsItem>
     {
         public List<HoldingsItem> holdings => list;
+
+        [JsonIgnore]
+        public new DataView dataView
+        {
+            get
+            {
+                return NorenApiHelpers.GetHoldingsDataTable(list).DefaultView;
+            }
+        }
     }
     public class Limits : NorenMessage
     {
