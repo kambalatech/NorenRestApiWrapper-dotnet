@@ -240,14 +240,17 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponse<ModifyOrderResponse>(response), uri, order.toJson(), getJKey);
             return true;            
         }
-        public bool SendCancelOrder(OnResponse response, CancelOrder order)
+        public bool SendCancelOrder(OnResponse response, string norenordno)
         {
             if (loginResp == null)
                 return false;
 
             string uri = "CancelOrder";
+            CancelOrder cancelOrder = new CancelOrder();
+            cancelOrder.norenordno = norenordno;
+            cancelOrder.uid = loginReq.uid;
 
-            rClient.makeRequest(new NorenApiResponse<CancelOrderResponse>(response), uri, order.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponse<CancelOrderResponse>(response), uri, cancelOrder.toJson(), getJKey);
             return true;
         }
 
