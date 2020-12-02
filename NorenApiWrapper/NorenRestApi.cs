@@ -111,7 +111,7 @@ namespace NorenRestApiWrapper
             login.pwd = ComputeSha256Hash(login.pwd);
             login.vc = "IDART_DESK";
 
-            login.appkey = ComputeSha256Hash(login.uid + "|" + "12be8cef3b1758f5");
+            login.appkey = ComputeSha256Hash(login.uid + "|" + login.appkey);
 
             rClient.endPoint = endPoint;
             string uri = "QuickAuth";
@@ -324,11 +324,17 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponseList<HoldingsResponse, HoldingsItem>(response), uri, holdings.toJson(), getJKey);
             return true;
         }
-        public bool SendGetLimits(OnResponse response, Limits limits)
+        public bool SendGetLimits(OnResponse response, string account, string product = "", string segment = "", string exchange = "")
         {
             if (loginResp == null)
                 return false;
 
+            Limits limits = new Limits();
+            limits.actid = account;
+            limits.uid = loginReq.uid;
+            limits.prd = product;
+            limits.seg = segment;
+            limits.exch = exchange;
             string uri = "Limits";
 
             rClient.makeRequest(new NorenApiResponse<LimitsResponse>(response), uri, limits.toJson(), getJKey);

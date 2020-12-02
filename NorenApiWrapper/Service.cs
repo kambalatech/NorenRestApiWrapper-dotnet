@@ -64,12 +64,13 @@ namespace NorenRestApiWrapper
                       {
                           Console.WriteLine("Exception: {0}", responseTask.Exception.InnerException);
                       }
-                      if(responseTask.IsCompleted && responseTask.Result.IsSuccessStatusCode)
+                      if(responseTask.IsCompleted)
                       { 
                           data = await responseTask.Result.Content.ReadAsStringAsync();
 
                           Console.WriteLine("Response data: {0}", data);
-                          response.OnMessageNotify(responseTask.Result, data);
+                          if(responseTask.Result.IsSuccessStatusCode)
+                              response.OnMessageNotify(responseTask.Result, data);
                       }
                   });
             
