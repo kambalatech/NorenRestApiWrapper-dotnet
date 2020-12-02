@@ -19,6 +19,7 @@ namespace NorenRestSample
         public static string pan = "AAAA45AAAA";
         
         public static string newpwd = "Qaws@34567";
+        public static string appkey = "12be8cef3b1758f5";
         #endregion
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
         {
@@ -40,28 +41,37 @@ namespace NorenRestSample
                 return;
             }
             //login is ok                
-            //nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
+
+            //
+            nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
+            return;
+            //get user details
+            nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
             //
             // send get order book
-            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
-            PlaceOrder order = new PlaceOrder();
-            order.uid = uid;
-            order.actid = "ACCT1";
-            order.exch = "NSE";
-            order.tsym = "INFY-EQ";
-            order.qty = "10";
-            order.dscqty = "0";
-            order.prc = "200000";
-            order.prd = "M";
-            order.trantype = "B";
-            order.prctyp = "LMT";
-            order.ret = "DAY";
-            order.ordersource = "MOB";
+            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "C");
 
             ///
             nApi.SendGetHoldings(Program.OnHoldingsResponse, "MOBKUMAR", "C");
 
-           //// nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+            ///
+            string account = "MOBKUMAR";
+            nApi.SendGetLimits(Program.OnResponseNOP, account);
+
+            PlaceOrder order = new PlaceOrder();
+            order.uid = uid;
+            order.actid = "MOBKUMAR";
+            order.exch = "NSE";
+            order.tsym = "INFY-EQ";
+            order.qty = "10";
+            order.dscqty = "0";
+            order.prc = "2000.00";
+            order.prd = "M";
+            order.trantype = "B";
+            order.prctyp = "LMT";
+            order.ret = "DAY";
+            order.ordersource = "MOB";            
+            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
 
             //nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
             //add the feed device
@@ -89,7 +99,7 @@ namespace NorenRestSample
             loginMessage.factor2 = pan;
             loginMessage.imei = "134243434";
             loginMessage.source = "MOB";
-
+            loginMessage.appkey = appkey;
             nApi.SendLogin(Program.OnAppLoginResponse, endPoint, loginMessage);
 
 
@@ -118,6 +128,7 @@ namespace NorenRestSample
             
             Console.WriteLine(Response.toJson());
         }
+
         
         public static void OnHoldingsResponse(NorenResponseMsg Response, bool ok)
         {
