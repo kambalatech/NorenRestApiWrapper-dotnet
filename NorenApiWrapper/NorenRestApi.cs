@@ -109,6 +109,10 @@ namespace NorenRestApiWrapper
         {
             loginReq = login;
             login.pwd = ComputeSha256Hash(login.pwd);
+            login.vc = "IDART_DESK";
+
+            login.appkey = ComputeSha256Hash(login.uid + "|" + "12be8cef3b1758f5");
+
             rClient.endPoint = endPoint;
             string uri = "QuickAuth";
             var ResponseHandler = new NorenApiResponse<LoginResponse>(response);

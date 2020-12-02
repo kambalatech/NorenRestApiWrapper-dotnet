@@ -171,8 +171,11 @@ namespace NorenRestApiWrapper
         public string imei;
         public string ip_address;
         public string source;
+        public string vc;
+        public string appkey;
     }
 
+    
     public class LoginResponse: NorenResponseMsg
     {
         public string request_time;
