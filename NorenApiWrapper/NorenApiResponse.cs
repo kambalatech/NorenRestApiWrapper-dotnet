@@ -41,8 +41,17 @@ namespace NorenRestApiWrapper
             {
                 try
                 {
-                    Message.list = JsonConvert.DeserializeObject<List<U>>(data);
-                    
+                    NorenResponseMsg msg = JsonConvert.DeserializeObject<NorenResponseMsg>(data);
+
+                    if(msg.stat == "Ok")
+                    { 
+                        Message.list = JsonConvert.DeserializeObject<List<U>>(data);
+                    }
+                    else
+                    {
+                        Message.Copy(msg);
+                        ResponseHandler(Message, false);
+                    }
 
                 }
                 catch (JsonReaderException ex)
@@ -61,7 +70,20 @@ namespace NorenRestApiWrapper
             }
             else
             {
-                Message.stat = data;
+                NorenResponseMsg msg = new NorenResponseMsg();
+
+                try
+                {
+                    msg = JsonConvert.DeserializeObject<NorenResponseMsg>(data);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error deserializing data {ex.ToString()}");
+                    return;
+                }
+                Message.stat = msg.stat;
+                Message.emsg = msg.emsg;
+
                 ResponseHandler(Message, false);
             }
         }
@@ -109,7 +131,20 @@ namespace NorenRestApiWrapper
             }
             else
             {
-                Message.stat = data;
+                NorenResponseMsg msg = new NorenResponseMsg();
+
+                try 
+                { 
+                    msg = JsonConvert.DeserializeObject<NorenResponseMsg>(data);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error deserializing data {ex.ToString()}");
+                    return;
+                }
+                Message.stat = msg.stat;
+                Message.emsg = msg.emsg;
+
                 ResponseHandler(Message, false);
             }
 

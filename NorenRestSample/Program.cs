@@ -43,6 +43,15 @@ namespace NorenRestSample
             //login is ok                
 
             //
+            ModifyOrder modifyOrder = new ModifyOrder();
+            modifyOrder.norenordno = "20120400060701";
+            modifyOrder.exch = "NSE";
+            modifyOrder.tsym = "RELIANCE-EQ";
+            modifyOrder.qty = "2";
+            modifyOrder.prc = "2116.00";
+            nApi.SendModifyOrder(Program.OnResponseNOP, modifyOrder);
+            
+            //
             nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
             return;
             //get user details

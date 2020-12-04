@@ -69,8 +69,8 @@ namespace NorenRestApiWrapper
                           data = await responseTask.Result.Content.ReadAsStringAsync();
 
                           Console.WriteLine("Response data: {0}", data);
-                          if(responseTask.Result.IsSuccessStatusCode)
-                              response.OnMessageNotify(responseTask.Result, data);
+                          
+                          response.OnMessageNotify(responseTask.Result, data);
                       }
                   });
             

@@ -239,6 +239,7 @@ namespace NorenRestApiWrapper
             if (loginResp == null)
                 return false;
 
+            order.uid = loginReq.uid;
             string uri = "ModifyOrder";
 
             rClient.makeRequest(new NorenApiResponse<ModifyOrderResponse>(response), uri, order.toJson(), getJKey);

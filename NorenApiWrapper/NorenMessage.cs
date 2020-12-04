@@ -12,6 +12,7 @@ namespace NorenRestApiWrapper
     public class NorenResponseMsg
     {//all resapi messages will be returned here
         public string stat;
+        public string emsg;
         public virtual string toJson()
         {
             string json = string.Empty;
@@ -27,6 +28,10 @@ namespace NorenRestApiWrapper
             return json;
         }
     }
+    public class StandardResponse : NorenResponseMsg
+    {
+        public string request_time;
+    }
     public class NorenMessage
     {
         public virtual string toJson()
@@ -41,6 +46,12 @@ namespace NorenRestApiWrapper
         public NorenListResponseMsg()
         {
             list = new List<T>();
+        }
+        public void Copy(NorenResponseMsg baseObject)
+        {
+            this.stat = baseObject.stat;
+            this.emsg = baseObject.emsg;
+            list = null;
         }
         
         [JsonIgnore]
@@ -180,8 +191,7 @@ namespace NorenRestApiWrapper
     {
         public string request_time;
         public string susertoken;
-        public string lastaccesstime;
-        public string emsg;
+        public string lastaccesstime;        
     }
 
     public class LogoutMessage : NorenMessage
@@ -193,7 +203,7 @@ namespace NorenRestApiWrapper
     {
         public string request_time;
 
-        public string emsg;
+        
     }
     public class UserDetails : NorenMessage
     {
@@ -219,7 +229,7 @@ namespace NorenRestApiWrapper
         public string actid;
         public string uprev;
         public string request_time;
-        public string emsg;
+        
     }
     public class ForgotPassword : NorenMessage
     {
@@ -227,11 +237,7 @@ namespace NorenRestApiWrapper
         public string pan;
         public string dob;
     }
-    public class StandardResponse : NorenResponseMsg
-    {
-        public string request_time;
-        public string emsg;
-    }
+    
 
     public class Changepwd : NorenMessage
     {
@@ -241,8 +247,7 @@ namespace NorenRestApiWrapper
     }
     public class ChangepwdResponse : NorenResponseMsg
     {
-        public string request_time;
-        public string emsg;
+        public string request_time;        
         public string dmsg;
     }
     
@@ -253,8 +258,7 @@ namespace NorenRestApiWrapper
     public class MWListResponse : NorenResponseMsg
     {
         public List<string> values;
-        public string request_time;
-        public string emsg;        
+        public string request_time;           
     }
     public class MarketWatch : NorenMessage
     {
@@ -273,8 +277,7 @@ namespace NorenRestApiWrapper
     public class MarketWatchResponse : NorenResponseMsg
     {
         public List<MarketWatchItem> values;
-        public string request_time;
-        public string emsg;
+        public string request_time;        
     }
     public class SearchScrip : NorenMessage
     {
@@ -295,8 +298,7 @@ namespace NorenRestApiWrapper
     public class SearchScripResponse : NorenResponseMsg
     {
         public List<ScripItem> values;
-        public string request_time;
-        public string emsg;
+        public string request_time;        
     }
 
     public class AddMultiScripsToMW : NorenMessage
@@ -337,8 +339,7 @@ namespace NorenRestApiWrapper
     }
     public class PlaceOrderResponse : NorenResponseMsg
     {
-        public string request_time;
-        public string emsg;
+        public string request_time;        
         public string norenordno;
     }
     public class ModifyOrder : NorenMessage
@@ -358,8 +359,7 @@ namespace NorenRestApiWrapper
     }
     public class ModifyOrderResponse : NorenResponseMsg
     {
-        public string request_time;
-        public string emsg;
+        public string request_time;        
         public string norenordno;
     }
     public class CancelOrder : NorenMessage
@@ -369,8 +369,7 @@ namespace NorenRestApiWrapper
     }
     public class CancelOrderResponse : NorenResponseMsg
     {
-        public string request_time;
-        public string emsg;
+        public string request_time;        
         public string norenordno;
     }
 
@@ -412,8 +411,7 @@ namespace NorenRestApiWrapper
         public string orddttm;
         public string ordenttm;
         public string extm;
-        public string request_time;
-        public string emsg;
+        public string request_time;        
     }
     public class OrderBookResponse : NorenListResponseMsg<OrderBookItem>
     {
@@ -471,8 +469,7 @@ namespace NorenRestApiWrapper
         public string avgprc2;
         public string fillshares3;
         public string avgprc3;
-        public string request_time;
-        public string emsg;
+        public string request_time;        
     }
 
     public class TradeBook : NorenMessage
@@ -513,8 +510,7 @@ namespace NorenRestApiWrapper
         public string flprc;
         public string ordersource;
         public string token;
-        public string request_time;
-        public string emsg;
+        public string request_time;        
     }
     public class ExchMsg : NorenMessage
     {
