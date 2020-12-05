@@ -41,24 +41,29 @@ namespace NorenRestSample
                 return;
             }
             //login is ok                
-
+            // send get order book
+            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
+            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "C");
+            
+            //
+            nApi.SendGetTradeBook(Program.OnResponseNOP, "h");
+            
             //
             ModifyOrder modifyOrder = new ModifyOrder();
-            modifyOrder.norenordno = "20120400060701";
+            modifyOrder.norenordno = "20120500069333";
             modifyOrder.exch = "NSE";
-            modifyOrder.tsym = "RELIANCE-EQ";
+            modifyOrder.tsym = "YESBANK-EQ";
             modifyOrder.qty = "2";
-            modifyOrder.prc = "2116.00";
+            modifyOrder.prc = "15.30";
             nApi.SendModifyOrder(Program.OnResponseNOP, modifyOrder);
             
             //
             nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
-            return;
+            
             //get user details
             nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
             //
-            // send get order book
-            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "C");
+            
 
             ///
             nApi.SendGetHoldings(Program.OnHoldingsResponse, "MOBKUMAR", "C");
