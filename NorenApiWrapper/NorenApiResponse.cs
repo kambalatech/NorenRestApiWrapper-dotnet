@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,7 +9,6 @@ using System.Net.Http;
 namespace NorenRestApiWrapper
 {
     public delegate void OnResponse(NorenResponseMsg Response, bool ok);
-
     
     public class BaseApiResponse
     {        
@@ -16,7 +16,23 @@ namespace NorenRestApiWrapper
         {
 
         }
+        public NorenResponseMsg GetNorenMessage(string data)
+        {
+            NorenResponseMsg msg = new NorenResponseMsg();
+
+            try
+            {
+                msg = JsonConvert.DeserializeObject<NorenResponseMsg>(data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deserializing data {ex.ToString()}");
+                return null;
+            }
+            return msg;
+        }
     }
+    
     public class NorenApiResponseList<T, U> : BaseApiResponse where T : NorenListResponseMsg<U>, new()
     {
         //watchers interested in the response
@@ -40,16 +56,17 @@ namespace NorenRestApiWrapper
             if (httpResponse.IsSuccessStatusCode)
             {
                 try
-                {
-                    NorenResponseMsg msg = JsonConvert.DeserializeObject<NorenResponseMsg>(data);
-
-                    if(msg.stat == "Ok")
+                {                    
+                    if(data[0] == '[')
                     { 
+                        //json lists begin with [
                         Message.list = JsonConvert.DeserializeObject<List<U>>(data);
                     }
                     else
                     {
-                        Message.Copy(msg);
+                        NorenResponseMsg msg = GetNorenMessage(data);
+                        Message.Copy(msg);                        
+                        
                         ResponseHandler(Message, false);
                     }
 
@@ -67,8 +84,8 @@ namespace NorenRestApiWrapper
                 }
                 ResponseNotifyInstance?.Invoke(Message);
                 ResponseHandler(Message, true);
-            }
-            else
+            }            
+            else if (httpResponse.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 NorenResponseMsg msg = new NorenResponseMsg();
 
@@ -84,6 +101,12 @@ namespace NorenRestApiWrapper
                 Message.stat = msg.stat;
                 Message.emsg = msg.emsg;
 
+                ResponseHandler(Message, false);
+            }
+            else 
+            {
+                Message.stat = httpResponse.StatusCode.ToString();
+                Message.emsg = data;
                 ResponseHandler(Message, false);
             }
         }
@@ -129,22 +152,18 @@ namespace NorenRestApiWrapper
                 }
                 
             }
-            else
+            else if (httpResponse.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                NorenResponseMsg msg = new NorenResponseMsg();
-
-                try 
-                { 
-                    msg = JsonConvert.DeserializeObject<NorenResponseMsg>(data);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error deserializing data {ex.ToString()}");
-                    return;
-                }
+                NorenResponseMsg msg = GetNorenMessage(data);
                 Message.stat = msg.stat;
                 Message.emsg = msg.emsg;
 
+                ResponseHandler(Message, false);
+            }
+            else
+            {
+                Message.stat = httpResponse.StatusCode.ToString();
+                Message.emsg = data;
                 ResponseHandler(Message, false);
             }
 
