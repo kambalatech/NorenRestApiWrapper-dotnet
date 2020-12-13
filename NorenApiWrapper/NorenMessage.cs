@@ -774,6 +774,8 @@ namespace NorenRestApiWrapper
         public string varmrg;
         public string expmrg;
         public string token;
+        public string uc;
+        public string lc;
     }
     public class SingleOrdHist : NorenMessage
     {

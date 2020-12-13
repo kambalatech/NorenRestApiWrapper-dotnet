@@ -41,7 +41,10 @@ namespace NorenRestSample
                 }
                 return;
             }
-            nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121300000003");
+            //nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121300000003");
+            //login is ok   
+            //send getsecurityinfo
+            nApi.SendGetSecurityInfo(Program.OnResponseNOP, "NSE", "22");
             return;
             PlaceOrder order = new PlaceOrder();
             order.uid = uid;
@@ -58,9 +61,7 @@ namespace NorenRestSample
             order.ordersource = "MOB";
             nApi.SendPlaceOrder(Program.OnResponseNOP, order);
             
-            //login is ok   
-            //send getsecurityinfo
-            //nApi.SendGetSecurityInfo(Program.OnResponseNOP, "NSE", "22");
+            
             // send get order book
             //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
             nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
