@@ -15,10 +15,10 @@ namespace NorenRestSample
     {
         #region credentials
         public static string uid = "MOBKUMAR";
-        public static string pwd = "Qaws@123456";
+        public static string pwd = "Qaws@34567";
         public static string pan = "AAAA45AAAA";
         
-        public static string newpwd = "Qaws@34567";
+        public static string newpwd = "Qaws@45678";
         public static string appkey = "12be8cef3b1758f5";
         #endregion
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
@@ -28,8 +28,9 @@ namespace NorenRestSample
 
             if (loginResp.stat == "Not_Ok")
             {
-                if (loginResp.emsg == "Invalid Input : Change Password")
+                if (loginResp.emsg == "Invalid Input : Change Password" || loginResp.emsg == "Invalid Input : Password Expired")
                 {
+                    //
                     Changepwd changepwd = new Changepwd();
                     changepwd.uid = uid;
                     changepwd.oldpwd = pwd;
@@ -40,14 +41,37 @@ namespace NorenRestSample
                 }
                 return;
             }
-            //login is ok                
+            nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121300000003");
+            return;
+            PlaceOrder order = new PlaceOrder();
+            order.uid = uid;
+            order.actid = "MOBKUMAR";
+            order.exch = "NSE";
+            order.tsym = "INFY-EQ";
+            order.qty = "10";
+            order.dscqty = "0";
+            order.prc = "1250.00";
+            order.prd = "M";
+            order.trantype = "B";
+            order.prctyp = "LMT";
+            order.ret = "DAY";
+            order.ordersource = "MOB";
+            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+            
+            //login is ok   
+            //send getsecurityinfo
+            //nApi.SendGetSecurityInfo(Program.OnResponseNOP, "NSE", "22");
             // send get order book
-            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
-            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "C");
+            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
+            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
+
+            ///
+            //nApi.SendGetHoldings(Program.OnHoldingsResponse, "MOBKUMAR", "C");
+
             
             //
-            nApi.SendGetTradeBook(Program.OnResponseNOP, "h");
-            
+            //nApi.SendGetTradeBook(Program.OnResponseNOP, "MOBKUMAR");
+            return;
             //
             ModifyOrder modifyOrder = new ModifyOrder();
             modifyOrder.norenordno = "20120500069333";
@@ -55,7 +79,7 @@ namespace NorenRestSample
             modifyOrder.tsym = "YESBANK-EQ";
             modifyOrder.qty = "2";
             modifyOrder.prc = "15.30";
-            nApi.SendModifyOrder(Program.OnResponseNOP, modifyOrder);
+            //nApi.SendModifyOrder(Program.OnResponseNOP, modifyOrder);
             
             //
             nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
@@ -65,27 +89,12 @@ namespace NorenRestSample
             //
             
 
-            ///
-            nApi.SendGetHoldings(Program.OnHoldingsResponse, "MOBKUMAR", "C");
-
+            
             ///
             string account = "MOBKUMAR";
             nApi.SendGetLimits(Program.OnResponseNOP, account);
 
-            PlaceOrder order = new PlaceOrder();
-            order.uid = uid;
-            order.actid = "MOBKUMAR";
-            order.exch = "NSE";
-            order.tsym = "INFY-EQ";
-            order.qty = "10";
-            order.dscqty = "0";
-            order.prc = "2000.00";
-            order.prd = "M";
-            order.trantype = "B";
-            order.prctyp = "LMT";
-            order.ret = "DAY";
-            order.ordersource = "MOB";            
-            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+            
 
             //nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
             //add the feed device
@@ -138,9 +147,8 @@ namespace NorenRestSample
             Console.WriteLine(userDetailsResponse.toJson());
         }
         public static void OnResponseNOP(NorenResponseMsg Response, bool ok)
-        {
-            
-            Console.WriteLine(Response.toJson());
+        {            
+            Console.WriteLine("app handler :" + Response.toJson());
         }
 
         
@@ -168,14 +176,37 @@ namespace NorenRestSample
             }
             Console.WriteLine();
         }
+        public static void OnOrderHistoryResponse(NorenResponseMsg Response, bool ok)
+        {
+            OrderHistoryResponse orderhistory = Response as OrderHistoryResponse;
 
+            if (orderhistory.list != null)
+            {
+                DataView dv = orderhistory.dataView;
+
+                //    for (int i = 0; i < dv.Count; i++)
+                printDataView(dv);
+            }
+            else
+            {
+                Console.WriteLine("app handler: no orders");
+            }
+        }
         public static void OnOrderBookResponse(NorenResponseMsg Response, bool ok)
         {
             OrderBookResponse orderBook = Response as OrderBookResponse;
-            DataView dv = orderBook.dataView;
+
+            if(orderBook.Orders != null)
+            { 
+                DataView dv = orderBook.dataView;
 
             //    for (int i = 0; i < dv.Count; i++)
-            printDataView(dv);
+                printDataView(dv);
+            }
+            else
+            {
+                Console.WriteLine("app handler: no orders");
+            }
         }
         public static void OnFeed(NorenFeed Feed)
         {

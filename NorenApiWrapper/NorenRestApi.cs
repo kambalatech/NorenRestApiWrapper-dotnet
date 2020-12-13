@@ -195,6 +195,20 @@ namespace NorenRestApiWrapper
             return true;
         }
         
+        public bool SendGetSecurityInfo(OnResponse response, string exch, string token)
+        {
+            if (loginResp == null)
+                return false;
+
+            GetSecurityInfo getsecurityinfo = new GetSecurityInfo();
+            getsecurityinfo.uid = loginReq.uid;
+            getsecurityinfo.exch = exch;
+            getsecurityinfo.token = token;
+            string uri = "GetSecurityInfo";
+
+            rClient.makeRequest(new NorenApiResponse<StandardResponse>(response), uri, getsecurityinfo.toJson(), getJKey);
+            return true;
+        }
         public bool SendAddMultiScripsToMW(OnResponse response, string watchlist, string scrips)
         {
             if (loginResp == null)
@@ -285,7 +299,7 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponseList<MultiLegOrderBookResponse, MultiLegOrderBookItem>(response), uri, mlorderbook.toJson(), getJKey);
             return true;
         }
-        public bool SendGetTradeBook(OnResponse response, string product)
+        public bool SendGetTradeBook(OnResponse response, string account)
         {
             if (loginResp == null)
                 return false;
@@ -293,9 +307,23 @@ namespace NorenRestApiWrapper
             string uri = "TradeBook";
             TradeBook tradebook = new TradeBook();
             tradebook.uid = loginReq.uid;
-            tradebook.prd = product;
+            tradebook.actid = account;
+            //tradebook.prd = product;            
 
             rClient.makeRequest(new NorenApiResponseList<TradeBookResponse, TradeBookItem>(response), uri, tradebook.toJson(), getJKey);
+            return true;
+        }
+        public bool SendGetOrderHistory(OnResponse response, string norenordno)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "SingleOrdHist";
+            SingleOrdHist orderhistory = new SingleOrdHist();
+            orderhistory.uid = loginReq.uid;
+            orderhistory.norenordno = norenordno;
+
+            rClient.makeRequest(new NorenApiResponseList<OrderHistoryResponse, SingleOrdHistItem>(response), uri, orderhistory.toJson(), getJKey);
             return true;
         }
         public bool SendGetPositionBook(OnResponse response, string account)

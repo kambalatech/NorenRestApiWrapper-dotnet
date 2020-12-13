@@ -64,10 +64,12 @@ namespace NorenRestApiWrapper
                     }
                     else
                     {
+                        //error messages
                         NorenResponseMsg msg = GetNorenMessage(data);
                         Message.Copy(msg);                        
                         
                         ResponseHandler(Message, false);
+                        return;
                     }
 
                 }
