@@ -8,10 +8,13 @@ using Websocket.Client;
 
 namespace NorenRestApiWrapper
 {
+    
     public class RESTClient
     {
         private HttpClient client = new HttpClient();
         private string _endPoint;
+        
+        public OnResponse onSessionClose;
         public string endPoint
         {
             get => _endPoint;
@@ -69,8 +72,19 @@ namespace NorenRestApiWrapper
                           data = await responseTask.Result.Content.ReadAsStringAsync();
 
                           Console.WriteLine("Response data: {0}", data);
-                          
-                          response.OnMessageNotify(responseTask.Result, data);
+
+                          if (data == "{\"stat\":\"Not_Ok\",\"emsg\":\"Session Expired : Invalid Session Key\"}")
+                          {
+                              //Console.WriteLine("call logout");
+                              LogoutResponse logout = new LogoutResponse();
+                              logout.emsg = "Session Expired : Invalid Session Key";
+                              logout.stat = "Not_Ok";
+                              
+                              onSessionClose?.Invoke(logout, false);
+                          }
+                              
+                          else 
+                              response.OnMessageNotify(responseTask.Result, data);
                       }
                   });
             
