@@ -14,7 +14,7 @@ namespace NorenRestSample
     static class Program
     {
         #region uat  credentials
-        //public static string endPoint = "http://180.179.158.229:5583/NorenWClient/";
+        //public static string endPoint = "http://<url>/NorenWClient/";
         //public static string uid = "MOBKUMAR";
         //public static string pwd = "Demo@1234";
         //public static string pan = "AAAAA1111D";
