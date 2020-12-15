@@ -237,7 +237,11 @@ namespace NorenRestApiWrapper
         public string pan;
         public string dob;
     }
-
+    public class ForgotPasswordResponse : StandardResponse
+    {
+        
+        
+    }
 
     public class Changepwd : NorenMessage
     {
