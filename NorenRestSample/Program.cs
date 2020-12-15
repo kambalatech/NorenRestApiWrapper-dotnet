@@ -13,13 +13,24 @@ namespace NorenRestSample
 {
     static class Program
     {
-        #region credentials
+        #region uat  credentials
+        public static string endPoint = "http://<url>/NorenWClient/"; 
         public static string uid = "MOBKUMAR";
-        public static string pwd = "Qaws@34567";
-        public static string pan = "AAAA45AAAA";
-        
-        public static string newpwd = "Qaws@45678";
+        public static string pwd = "Demo@1234";
+        public static string pan = "AAAAA1111D";
+
+        public static string newpwd = "Demo@12345";
         public static string appkey = "12be8cef3b1758f5";
+        #endregion
+
+        #region dev  credentials
+        //string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
+        //public static string uid = "MOBKUMAR";
+        //public static string pwd = "Qaws@34567";
+        //public static string pan = "AAAA45AAAA";
+
+        //public static string newpwd = "Qaws@45678";
+        //public static string appkey = "12be8cef3b1758f5";
         #endregion
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
         {
@@ -41,30 +52,52 @@ namespace NorenRestSample
                 }
                 return;
             }
-            //nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121300000003");
-            //login is ok   
-            //send getsecurityinfo
             nApi.SendGetSecurityInfo(Program.OnResponseNOP, "NSE", "22");
+            //nApi.SendSearchScrip(Program.OnResponseNOP, "CDS", "USDINR");
+            //nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121400000007");
+            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
+            //nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
             return;
             PlaceOrder order = new PlaceOrder();
             order.uid = uid;
             order.actid = "MOBKUMAR";
-            order.exch = "NSE";
-            order.tsym = "INFY-EQ";
+            order.exch = "CDS";
+            order.tsym = "USDINR27JAN21F";
             order.qty = "10";
             order.dscqty = "0";
-            order.prc = "1250.00";
+            order.prc = "80.0025";
             order.prd = "M";
             order.trantype = "B";
             order.prctyp = "LMT";
             order.ret = "DAY";
             order.ordersource = "MOB";
             nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+            //
+            return;
+            ModifyOrder modifyOrder = new ModifyOrder();
+            modifyOrder.norenordno = "20121400000010";
+            modifyOrder.exch = "NSE";
+            modifyOrder.tsym = "INFY-EQ";
+            modifyOrder.prctyp = "SL-LMT";
+            modifyOrder.qty = "2";
+            modifyOrder.prc = "1250.20";
+            modifyOrder.trgprc = "1250.00";
+            nApi.SendModifyOrder(Program.OnResponseNOP, modifyOrder);
+            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
             
+
             
+            //login is ok   
+            //nApi.SendGetTradeBook(Program.OnTradeBookResponse, "MOBKUMAR");
+            //send getsecurityinfo
+            //
+
+           
+
+            return;
             // send get order book
             //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
-            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
+            
 
             ///
             //nApi.SendGetHoldings(Program.OnHoldingsResponse, "MOBKUMAR", "C");
@@ -72,18 +105,11 @@ namespace NorenRestSample
             
             //
             //nApi.SendGetTradeBook(Program.OnResponseNOP, "MOBKUMAR");
-            return;
-            //
-            ModifyOrder modifyOrder = new ModifyOrder();
-            modifyOrder.norenordno = "20120500069333";
-            modifyOrder.exch = "NSE";
-            modifyOrder.tsym = "YESBANK-EQ";
-            modifyOrder.qty = "2";
-            modifyOrder.prc = "15.30";
-            //nApi.SendModifyOrder(Program.OnResponseNOP, modifyOrder);
+            
+            
             
             //
-            nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
+            
             
             //get user details
             nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
@@ -113,9 +139,7 @@ namespace NorenRestSample
         static NorenRestApi nApi = new NorenRestApi();
         
         static void Main(string[] args)
-        {           
-            string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
-
+        {
             LoginMessage loginMessage = new LoginMessage();
             loginMessage.apkversion = "1.0.0";
             loginMessage.uid = uid;
@@ -191,6 +215,22 @@ namespace NorenRestSample
             else
             {
                 Console.WriteLine("app handler: no orders");
+            }
+        }
+        public static void OnTradeBookResponse(NorenResponseMsg Response, bool ok)
+        {
+            TradeBookResponse orderBook = Response as TradeBookResponse;
+
+            if (orderBook.trades != null)
+            {
+                DataView dv = orderBook.dataView;
+
+                //    for (int i = 0; i < dv.Count; i++)
+                printDataView(dv);
+            }
+            else
+            {
+                Console.WriteLine("app handler: no trades");
             }
         }
         public static void OnOrderBookResponse(NorenResponseMsg Response, bool ok)

@@ -206,7 +206,7 @@ namespace NorenRestApiWrapper
             getsecurityinfo.token = token;
             string uri = "GetSecurityInfo";
 
-            rClient.makeRequest(new NorenApiResponse<StandardResponse>(response), uri, getsecurityinfo.toJson(), getJKey);
+            rClient.makeRequest(new NorenApiResponse<GetSecurityInfoResponse>(response), uri, getsecurityinfo.toJson(), getJKey);
             return true;
         }
         public bool SendAddMultiScripsToMW(OnResponse response, string watchlist, string scrips)
