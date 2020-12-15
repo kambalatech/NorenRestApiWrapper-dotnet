@@ -4,6 +4,7 @@ using System.Text;
 using Websocket.Client;
 using System.Security.Cryptography;
 
+
 namespace NorenRestApiWrapper
 {
     /// <summary>
@@ -21,16 +22,25 @@ namespace NorenRestApiWrapper
     /// </summary>
     /// <param name="msg"></param>
     public delegate void OnStreamConnect(NorenStreamMessage msg);
+
     public class NorenRestApi
     {
         RESTClient rClient;
         WebsocketClient wsclient;
-        bool loggedin;
+        
         LoginResponse loginResp;
         LoginMessage loginReq;
         public OnFeed OnFeedCallback;
         public OnOrderFeed OnOrderCallback;
         public OnStreamConnect onStreamConnectCallback;
+
+        public OnResponse SessionCloseCallback
+        {
+            set
+            {
+                rClient.onSessionClose = value;
+            }
+        }
         public NorenRestApi()
         {            
             rClient = new RESTClient();            

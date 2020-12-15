@@ -14,23 +14,23 @@ namespace NorenRestSample
     static class Program
     {
         #region uat  credentials
-        public static string endPoint = "http://<url>/NorenWClient/"; 
-        public static string uid = "MOBKUMAR";
-        public static string pwd = "Demo@1234";
-        public static string pan = "AAAAA1111D";
+        //public static string endPoint = "http://<url>/NorenWClient/";
+        //public static string uid = "MOBKUMAR";
+        //public static string pwd = "Demo@1234";
+        //public static string pan = "AAAAA1111D";
 
-        public static string newpwd = "Demo@12345";
-        public static string appkey = "12be8cef3b1758f5";
+        //public static string newpwd = "Demo@12345";
+        //public static string appkey = "12be8cef3b1758f5";
         #endregion
 
         #region dev  credentials
-        //string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
-        //public static string uid = "MOBKUMAR";
-        //public static string pwd = "Qaws@34567";
-        //public static string pan = "AAAA45AAAA";
+        public static string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
+        public static string uid = "MOBKUMAR";
+        public static string pwd = "Qaws@34567";
+        public static string pan = "AAAA45AAAA";
 
-        //public static string newpwd = "Qaws@45678";
-        //public static string appkey = "12be8cef3b1758f5";
+        public static string newpwd = "Qaws@45678";
+        public static string appkey = "12be8cef3b1758f5";
         #endregion
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
         {
@@ -52,9 +52,10 @@ namespace NorenRestSample
                 }
                 return;
             }
-            nApi.SendGetSecurityInfo(Program.OnResponseNOP, "NSE", "22");
+            Console.ReadKey();
+            //nApi.SendGetSecurityInfo(Program.OnResponseNOP, "CDS", "1");
             //nApi.SendSearchScrip(Program.OnResponseNOP, "CDS", "USDINR");
-            //nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121400000007");
+            nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121500000010");
             //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
             //nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
             return;
@@ -66,12 +67,13 @@ namespace NorenRestSample
             order.qty = "10";
             order.dscqty = "0";
             order.prc = "80.0025";
-            order.prd = "M";
+            order.prd = "X";
             order.trantype = "B";
             order.prctyp = "LMT";
             order.ret = "DAY";
             order.ordersource = "MOB";
             nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+            
             //
             return;
             ModifyOrder modifyOrder = new ModifyOrder();
@@ -150,12 +152,12 @@ namespace NorenRestSample
             loginMessage.appkey = appkey;
             nApi.SendLogin(Program.OnAppLoginResponse, endPoint, loginMessage);
 
-
+            nApi.SessionCloseCallback = Program.OnAppLogout;
             //dont do anything till we get a login response            
             Console.WriteLine("Press any key to logout.");
             Console.Read();
 
-            nApi.SendLogout(Program.OnResponseNOP);
+            nApi.SendLogout(Program.OnAppLogout);
 
             bool dontexit = true;
             while(dontexit)
@@ -175,8 +177,11 @@ namespace NorenRestSample
         {            
             Console.WriteLine("app handler :" + Response.toJson());
         }
+        public static void OnAppLogout(NorenResponseMsg Response, bool ok)
+        {
+            Console.WriteLine("logout handler :" + Response.toJson());
+        }
 
-        
         public static void OnHoldingsResponse(NorenResponseMsg Response, bool ok)
         {
             HoldingsResponse holdingsResponse = Response as HoldingsResponse;
