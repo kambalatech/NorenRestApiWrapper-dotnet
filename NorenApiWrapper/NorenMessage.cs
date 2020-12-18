@@ -376,7 +376,36 @@ namespace NorenRestApiWrapper
         public string request_time;
         public string norenordno;
     }
+    public class ExitSNOOrder : NorenMessage
+    {
+        public string norenordno;
+        public string prd;
+        public string uid;
+    }
+    public class ExitSNOOrderResponse : StandardResponse
+    {
+        
+        
+    }
 
+    public class ProductConversion : NorenMessage
+    {
+        public string exch;
+        public string tsym;
+        public string qty;
+        public string uid;
+        public string actid;
+        public string prd;
+        public string prevprd;
+        public string trantype;
+        public string postype;
+        public string ordersource;
+    }
+
+    public class ProductConversionResponse : StandardResponse
+    {
+        
+    }
     public class OrderBook : NorenMessage
     {
         public string uid;

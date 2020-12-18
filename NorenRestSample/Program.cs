@@ -15,22 +15,22 @@ namespace NorenRestSample
     {
         #region uat  credentials
         //public static string endPoint = "http://<url>/NorenWClient/";
-        //public static string uid = "MOBKUMAR";
-        //public static string pwd = "Demo@1234";
-        //public static string pan = "AAAAA1111D";
+        public static string uid = "MOBKUMAR";
+        public static string pwd = "Demo@1234";
+        public static string pan = "AAAAA1111D";
 
-        //public static string newpwd = "Demo@12345";
-        //public static string appkey = "12be8cef3b1758f5";
+        public static string newpwd = "Demo@12345";
+        public static string appkey = "12be8cef3b1758f5";
         #endregion
 
         #region dev  credentials
-        public static string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
-        public static string uid = "MOBKUMAR";
-        public static string pwd = "Qaws@34567";
-        public static string pan = "AAAA45AAAA";
+        //public static string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
+        //public static string uid = "MOBKUMAR";
+        //public static string pwd = "Qaws@34567";
+        //public static string pan = "AAAA45AAAA";
 
-        public static string newpwd = "Qaws@45678";
-        public static string appkey = "12be8cef3b1758f5";
+        //public static string newpwd = "Qaws@45678";
+        //public static string appkey = "12be8cef3b1758f5";
         #endregion
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
         {
@@ -52,13 +52,7 @@ namespace NorenRestSample
                 }
                 return;
             }
-            Console.ReadKey();
-            //nApi.SendGetSecurityInfo(Program.OnResponseNOP, "CDS", "1");
-            //nApi.SendSearchScrip(Program.OnResponseNOP, "CDS", "USDINR");
-            nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121500000010");
-            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
-            //nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
-            return;
+            //sample cover order
             PlaceOrder order = new PlaceOrder();
             order.uid = uid;
             order.actid = "MOBKUMAR";
@@ -66,13 +60,51 @@ namespace NorenRestSample
             order.tsym = "USDINR27JAN21F";
             order.qty = "10";
             order.dscqty = "0";
-            order.prc = "80.0025";
-            order.prd = "X";
+            order.prc = "76.0025";
+            order.blprc = "74.0025";
+            order.prd = "H";
             order.trantype = "B";
             order.prctyp = "LMT";
             order.ret = "DAY";
             order.ordersource = "MOB";
+
             nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+            //nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121600000009");
+            //nApi.SendGetSecurityInfo(Program.OnResponseNOP, "NFO", "47004");
+            return;;
+
+            //nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
+            //PlaceOrder order = new PlaceOrder();
+            order.uid = uid;
+            order.actid = "MOBKUMAR";
+            order.exch = "CDS";
+            order.tsym = "USDINR27JAN21F";
+            order.qty = "10";
+            order.dscqty = "0";
+            order.prc = "76.0025";
+            order.prd = "I";
+            order.trantype = "B";
+            order.prctyp = "LMT";
+            order.ret = "DAY";
+            order.ordersource = "MOB";
+
+            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+            order.exch = "NFO";
+            order.tsym = "IDEA31DEC20F";
+            order.qty = "70000";
+            
+            order.prc = "10.25";
+            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+
+            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
+            Console.ReadKey();
+            //
+            //nApi.SendSearchScrip(Program.OnResponseNOP, "CDS", "USDINR");
+            
+            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
+            //
+            return;
+            
             
             //
             return;
@@ -85,7 +117,7 @@ namespace NorenRestSample
             modifyOrder.prc = "1250.20";
             modifyOrder.trgprc = "1250.00";
             nApi.SendModifyOrder(Program.OnResponseNOP, modifyOrder);
-            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
+            
             
 
             

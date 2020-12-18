@@ -160,8 +160,20 @@ namespace NorenRestApiWrapper
             changepwd.uid = loginReq.uid;
             changepwd.oldpwd = ComputeSha256Hash(changepwd.oldpwd);
             string uri = "Changepwd";
-            var ResponseHandler = new NorenApiResponse<LogoutResponse>(response);
+            var ResponseHandler = new NorenApiResponse<ChangepwdResponse>(response);
             rClient.makeRequest(ResponseHandler, uri, changepwd.toJson());
+            return true;
+        }
+        public bool SendProductConversion(OnResponse response, ProductConversion productConversion)
+        {
+            if (loginResp == null)
+                return false;
+
+            productConversion.uid = loginReq.uid;
+            
+            string uri = "ProductConversion";
+            var ResponseHandler = new NorenApiResponse<ProductConversionResponse>(response);
+            rClient.makeRequest(ResponseHandler, uri, productConversion.toJson());
             return true;
         }
         public bool SendForgotPassword(OnResponse response, string pan, string dob)
@@ -297,7 +309,20 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponse<CancelOrderResponse>(response), uri, cancelOrder.toJson(), getJKey);
             return true;
         }
+        public bool SendExitSNOOrder(OnResponse response, string norenordno, string product)
+        {
+            if (loginResp == null)
+                return false;
 
+            string uri = "ExitSNOOrder";
+            ExitSNOOrder exitSNOOrder = new ExitSNOOrder();
+            exitSNOOrder.norenordno = norenordno;
+            exitSNOOrder.prd = product;
+            exitSNOOrder.uid = loginReq.uid;
+
+            rClient.makeRequest(new NorenApiResponse<ExitSNOOrderResponse>(response), uri, exitSNOOrder.toJson(), getJKey);
+            return true;
+        }
         public bool SendGetOrderBook(OnResponse response, string product)
         {
             if (loginResp == null)
