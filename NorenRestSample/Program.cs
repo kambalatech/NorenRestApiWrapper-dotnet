@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NorenRestApiWrapper;
 
@@ -14,24 +15,25 @@ namespace NorenRestSample
     static class Program
     {
         #region uat  credentials
-        //public static string endPoint = "http://<url>/NorenWClient/";
-        public static string uid = "MOBKUMAR";
+        public static string endPoint = "http://180.179.158.229:5583/NorenWClient/";
+        public static string uid = "IDARTUI";       
         public static string pwd = "Demo@1234";
         public static string pan = "AAAAA1111D";
-
-        public static string newpwd = "Demo@12345";
+        public static string actid = "IDARTUI";
+        public static string newpwd = "Demo@123456";
         public static string appkey = "12be8cef3b1758f5";
         #endregion
 
         #region dev  credentials
         //public static string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
-        //public static string uid = "MOBKUMAR";
+        //public static string uid = actid;
         //public static string pwd = "Qaws@34567";
         //public static string pan = "AAAA45AAAA";
 
         //public static string newpwd = "Qaws@45678";
         //public static string appkey = "12be8cef3b1758f5";
         #endregion
+        public static bool loggedin = false;
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
         {
             //do all work here
@@ -52,31 +54,16 @@ namespace NorenRestSample
                 }
                 return;
             }
-            //sample cover order
+
+
+            loggedin = true;
+            ActionOptions();
+            return;
+
+            //nApi.SendGetPositionBook(Program.OnResponseNOP, actid);
             PlaceOrder order = new PlaceOrder();
             order.uid = uid;
-            order.actid = "MOBKUMAR";
-            order.exch = "CDS";
-            order.tsym = "USDINR27JAN21F";
-            order.qty = "10";
-            order.dscqty = "0";
-            order.prc = "76.0025";
-            order.blprc = "74.0025";
-            order.prd = "H";
-            order.trantype = "B";
-            order.prctyp = "LMT";
-            order.ret = "DAY";
-            order.ordersource = "MOB";
-
-            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
-            //nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, "20121600000009");
-            //nApi.SendGetSecurityInfo(Program.OnResponseNOP, "NFO", "47004");
-            return;;
-
-            //nApi.SendGetPositionBook(Program.OnResponseNOP, "MOBKUMAR");
-            //PlaceOrder order = new PlaceOrder();
-            order.uid = uid;
-            order.actid = "MOBKUMAR";
+            order.actid = actid;
             order.exch = "CDS";
             order.tsym = "USDINR27JAN21F";
             order.qty = "10";
@@ -118,50 +105,12 @@ namespace NorenRestSample
             modifyOrder.trgprc = "1250.00";
             nApi.SendModifyOrder(Program.OnResponseNOP, modifyOrder);
             
-            
-
-            
-            //login is ok   
-            //nApi.SendGetTradeBook(Program.OnTradeBookResponse, "MOBKUMAR");
-            //send getsecurityinfo
-            //
-
-           
-
             return;
-            // send get order book
-            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "h");
             
-
-            ///
-            //nApi.SendGetHoldings(Program.OnHoldingsResponse, "MOBKUMAR", "C");
-
-            
-            //
-            //nApi.SendGetTradeBook(Program.OnResponseNOP, "MOBKUMAR");
-            
-            
-            
-            //
-            
-            
-            //get user details
-            nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
-            //
-            
-
-            
-            ///
-            string account = "MOBKUMAR";
-            nApi.SendGetLimits(Program.OnResponseNOP, account);
-
-            
-
-            //nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
             //add the feed device
             string feedws = "ws://kurma.kambala.co.in:9655/NorenStream/NorenWS";
             nApi.onStreamConnectCallback = Program.OnStreamConnect;
-            //nApi.AddFeedDevice(feedws, Program.OnFeed);
+            nApi.AddFeedDevice(feedws, Program.OnFeed);
             
         }
 
@@ -185,19 +134,79 @@ namespace NorenRestSample
             nApi.SendLogin(Program.OnAppLoginResponse, endPoint, loginMessage);
 
             nApi.SessionCloseCallback = Program.OnAppLogout;
-            //dont do anything till we get a login response            
-            Console.WriteLine("Press any key to logout.");
-            Console.Read();
 
-            nApi.SendLogout(Program.OnAppLogout);
-
+            while(loggedin == false)
+            {
+                //dont do anything till we get a login response         
+                Thread.Sleep(5);
+            }
             bool dontexit = true;
             while(dontexit)
-            { 
-                var kp = Console.ReadKey();
-                if (kp.Key == ConsoleKey.Q)
-                    dontexit = false;
-                Console.WriteLine("Press q to exit.");
+            {                
+                var input = Console.ReadLine();
+                var opts = input.Split(' ');
+                foreach (string opt in opts)
+                {
+                    switch (opt.ToUpper())
+                    {
+                        case "C":
+                            // process argument...
+                            ActionPlaceCOorder();
+                            break;
+                        case "T":
+                            nApi.SendGetTradeBook(Program.OnTradeBookResponse, actid);
+                            break;
+                        case "O":
+                            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
+                            break;
+                        case "S":
+                            string exch;
+                            string token;
+                            Console.WriteLine("Enter exch:");
+                            exch = Console.ReadLine();
+                            Console.WriteLine("Enter Token:");
+                            token = Console.ReadLine();
+                            nApi.SendGetSecurityInfo(Program.OnResponseNOP, exch, token);
+                            break;
+                        case "H":
+                            //check order
+                            Console.WriteLine("Enter OrderNo:");
+                            var orderno = Console.ReadLine();
+                            nApi.SendGetOrderHistory(Program.OnOrderHistoryResponse, orderno);
+                            break;
+                        case "Q":
+                            nApi.SendLogout(Program.OnAppLogout);
+                            dontexit = false;
+                        return;
+                        case "B":
+                            ActionPlaceCOorder();
+                            break;
+                        case "U":
+                            //get user details
+                            nApi.SendGetUserDetails(Program.OnUserDetailsResponse);
+                            break;
+                        case "G":
+                            nApi.SendGetHoldings(Program.OnHoldingsResponse, actid, "C");
+                            break;
+                        case "L":
+                            nApi.SendGetLimits(Program.OnResponseNOP, actid);
+                            break;
+
+                        case "W":
+                            nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
+                            break;
+                        default:
+                            // do other stuff...
+                            ActionOptions();
+                            break;
+                    }
+                }
+                
+
+                //var kp = Console.ReadKey();
+                //if (kp.Key == ConsoleKey.Q)
+                //    dontexit = false;
+                //Console.WriteLine("Press q to exit.");
             }            
         }
         public static void OnUserDetailsResponse(NorenResponseMsg Response, bool ok)
@@ -304,5 +313,66 @@ namespace NorenRestSample
         {
             Console.WriteLine(Order.toJson());
         }
+
+
+        #region actions
+        public static void ActionPlaceCOorder()
+        {
+            //sample cover order
+            PlaceOrder order = new PlaceOrder();
+            order.uid = uid;
+            order.actid = actid;
+            order.exch = "CDS";
+            order.tsym = "USDINR27JAN21F";
+            order.qty = "10";
+            order.dscqty = "0";
+            order.prc = "76.0025";
+            order.blprc = "74.0025";
+            order.prd = "H";
+            order.trantype = "B";
+            order.prctyp = "LMT";
+            order.ret = "DAY";
+            order.ordersource = "MOB";
+
+            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+        }
+
+        public static void ActionPlaceBuyorder()
+        {
+            //sample cover order
+            PlaceOrder order = new PlaceOrder();
+            order.uid = uid;
+            order.actid = actid;
+            order.exch = "CDS";
+            order.tsym = "USDINR27JAN21F";
+            order.qty = "10";
+            order.dscqty = "0";
+            order.prc = "76.0025";
+            
+            order.prd = "I";
+            order.trantype = "B";
+            order.prctyp = "LMT";
+            order.ret = "DAY";
+            order.ordersource = "MOB";
+
+            nApi.SendPlaceOrder(Program.OnResponseNOP, order);
+        }
+
+        public static void ActionOptions()
+        {
+            Console.WriteLine("Q: logout.");
+            Console.WriteLine("O: get OrderBook");
+            Console.WriteLine("T: get TradeBook");
+            Console.WriteLine("B: place a buy order");
+            Console.WriteLine("C: place a cover order");
+            Console.WriteLine("S: get security info");
+            Console.WriteLine("H: get order history");
+            Console.WriteLine("G: get holdings");
+            Console.WriteLine("L: get limits");
+            Console.WriteLine("W: search for scrips (min 3 chars)");
+
+        }
+        #endregion
     }
+
 }
