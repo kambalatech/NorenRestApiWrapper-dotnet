@@ -173,7 +173,7 @@ namespace NorenRestApiWrapper
             
             string uri = "ProductConversion";
             var ResponseHandler = new NorenApiResponse<ProductConversionResponse>(response);
-            rClient.makeRequest(ResponseHandler, uri, productConversion.toJson());
+            rClient.makeRequest(ResponseHandler, uri, productConversion.toJson(), getJKey);
             return true;
         }
         public bool SendForgotPassword(OnResponse response, string pan, string dob)

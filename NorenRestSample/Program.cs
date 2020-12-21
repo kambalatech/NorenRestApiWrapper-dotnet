@@ -15,7 +15,7 @@ namespace NorenRestSample
     static class Program
     {
         #region uat  credentials
-        public static string endPoint = "http://180.179.158.229:5583/NorenWClient/";
+        public static string endPoint = "<uri>/NorenWClient/";
         public static string uid = "IDARTUI";       
         public static string pwd = "Demo@1234";
         public static string pan = "AAAAA1111D";
@@ -83,17 +83,6 @@ namespace NorenRestSample
             order.prc = "10.25";
             nApi.SendPlaceOrder(Program.OnResponseNOP, order);
 
-            nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
-            Console.ReadKey();
-            //
-            //nApi.SendSearchScrip(Program.OnResponseNOP, "CDS", "USDINR");
-            
-            //nApi.SendGetOrderBook(Program.OnOrderBookResponse, "");
-            //
-            return;
-            
-            
-            //
             return;
             ModifyOrder modifyOrder = new ModifyOrder();
             modifyOrder.norenordno = "20121400000010";
@@ -194,6 +183,20 @@ namespace NorenRestSample
 
                         case "W":
                             nApi.SendSearchScrip(Program.OnResponseNOP, "NSE", "INFY");
+                            break;
+                        case "P":
+                            ProductConversion productConversion = new ProductConversion();
+                            productConversion.actid = actid;
+                            productConversion.exch = "NSE";
+                            productConversion.ordersource = "MOB";
+                            productConversion.prd = "C";
+                            productConversion.prevprd = "I";
+                            productConversion.qty = "1";
+                            productConversion.trantype = "B";
+                            productConversion.tsym = "ABB-EQ";
+                            productConversion.uid = uid;
+                            productConversion.postype = "Day";
+                            nApi.SendProductConversion(Program.OnResponseNOP, productConversion);
                             break;
                         default:
                             // do other stuff...
@@ -370,6 +373,7 @@ namespace NorenRestSample
             Console.WriteLine("G: get holdings");
             Console.WriteLine("L: get limits");
             Console.WriteLine("W: search for scrips (min 3 chars)");
+            Console.WriteLine("P: positionn convert");
 
         }
         #endregion
