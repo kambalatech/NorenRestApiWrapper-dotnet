@@ -177,10 +177,7 @@ namespace NorenRestApiWrapper
             return true;
         }
         public bool SendForgotPassword(OnResponse response, string pan, string dob)
-        {
-            if (loginResp == null)
-                return false;
-
+        {            
             ForgotPassword forgotPassword = new ForgotPassword();
             forgotPassword.uid = loginReq.uid;
             forgotPassword.pan = pan;

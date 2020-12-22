@@ -15,23 +15,33 @@ namespace NorenRestSample
     static class Program
     {
         #region uat  credentials
-        public static string endPoint = "<uri>/NorenWClient/";
-        public static string uid = "IDARTUI";       
-        public static string pwd = "Demo@1234";
-        public static string pan = "AAAAA1111D";
-        public static string actid = "IDARTUI";
-        public static string newpwd = "Demo@123456";
-        public static string appkey = "12be8cef3b1758f5";
+        //public static string endPoint = "http://localhost:5583/NorenWClient/";
+        //public static string uid = "IDARTUI";       
+        //public static string pwd = "Demo@1234";
+        //public static string pan = "AAAAA1111D";
+        //public static string actid = "IDARTUI";
+        //public static string newpwd = "Demo@123456";
+        //public static string appkey = "12be8cef3b1758f5";
+        #endregion
+        #region uat  credentials
+        //public static string endPoint = "http://localhost:5583/NorenWClient/";
+        //public static string uid = "MOBKUMAR";
+        //public static string pwd = "Demo@1234";
+        //public static string pan = "AAAAA1111D";
+        //public static string actid = "MOBKUMAR";
+        //public static string newpwd = "Demo@123456";
+        //public static string appkey = "12be8cef3b1758f5";
         #endregion
 
         #region dev  credentials
-        //public static string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
-        //public static string uid = actid;
-        //public static string pwd = "Qaws@34567";
-        //public static string pan = "AAAA45AAAA";
-
-        //public static string newpwd = "Qaws@45678";
-        //public static string appkey = "12be8cef3b1758f5";
+        public static string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
+        public static string uid = "MOBKUMAR";
+        public static string actid = "MOBKUMAR";        
+        public static string pwd = "Qaws@45678";
+        public static string pan = "AAAA45AAAA";
+        public static string dob = "03021970";
+        public static string newpwd = "Qaws@1234";
+        public static string appkey = "12be8cef3b1758f5";
         #endregion
         public static bool loggedin = false;
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
@@ -51,6 +61,10 @@ namespace NorenRestSample
                     nApi.Changepwd(Program.OnResponseNOP, changepwd);
                     //this will change pwd. restart to relogin with new pwd
                     return;
+                }
+                else if (loginResp.emsg == "Invalid Input : Blocked")
+                {                    
+                    nApi.SendForgotPassword(Program.OnResponseNOP, pan, dob);
                 }
                 return;
             }
@@ -193,10 +207,13 @@ namespace NorenRestSample
                             productConversion.prevprd = "I";
                             productConversion.qty = "1";
                             productConversion.trantype = "B";
-                            productConversion.tsym = "ABB-EQ";
+                            productConversion.tsym = "YESBANK-EQ";
                             productConversion.uid = uid;
                             productConversion.postype = "Day";
                             nApi.SendProductConversion(Program.OnResponseNOP, productConversion);
+                            break;
+                        case "FP":                            
+                            nApi.SendForgotPassword(Program.OnResponseNOP,pan, dob);
                             break;
                         default:
                             // do other stuff...
@@ -373,8 +390,9 @@ namespace NorenRestSample
             Console.WriteLine("G: get holdings");
             Console.WriteLine("L: get limits");
             Console.WriteLine("W: search for scrips (min 3 chars)");
-            Console.WriteLine("P: positionn convert");
-
+            Console.WriteLine("P: position convert");
+            Console.WriteLine("U: get user details");
+            
         }
         #endregion
     }
