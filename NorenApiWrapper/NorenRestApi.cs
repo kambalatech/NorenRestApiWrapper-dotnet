@@ -176,10 +176,10 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(ResponseHandler, uri, productConversion.toJson(), getJKey);
             return true;
         }
-        public bool SendForgotPassword(OnResponse response, string pan, string dob)
+        public bool SendForgotPassword(OnResponse response, string user, string pan, string dob)
         {            
             ForgotPassword forgotPassword = new ForgotPassword();
-            forgotPassword.uid = loginReq.uid;
+            forgotPassword.uid = user;
             forgotPassword.pan = pan;
             forgotPassword.dob = dob;
 
