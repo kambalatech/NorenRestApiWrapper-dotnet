@@ -21,7 +21,7 @@ namespace NorenRestSample
         //public static string pan = "AAAAA1111D";
         //public static string actid = "IDARTUI";
         //public static string newpwd = "Demo@123456";
-        //public static string appkey = "12be8cef3b1758f5";
+        //public static string appkey = "";
         #endregion
         #region uat  credentials
         //public static string endPoint = "http://localhost:5583/NorenWClient/";
@@ -30,7 +30,7 @@ namespace NorenRestSample
         //public static string pan = "AAAAA1111D";
         //public static string actid = "MOBKUMAR";
         //public static string newpwd = "Demo@123456";
-        //public static string appkey = "12be8cef3b1758f5";
+        //public static string appkey = "";
         #endregion
 
         #region dev  credentials
@@ -41,7 +41,7 @@ namespace NorenRestSample
         public static string pan = "AAAA45AAAA";
         public static string dob = "03021970";
         public static string newpwd = "Qaws@1234";
-        public static string appkey = "12be8cef3b1758f5";
+        public static string appkey = "";
         #endregion
         public static bool loggedin = false;
         public static void OnAppLoginResponse(NorenResponseMsg Response, bool ok)
