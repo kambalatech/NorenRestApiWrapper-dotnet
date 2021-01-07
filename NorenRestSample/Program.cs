@@ -14,33 +14,15 @@ namespace NorenRestSample
 {
     static class Program
     {
-        #region uat  credentials
-        //public static string endPoint = "http://localhost:5583/NorenWClient/";
-        //public static string uid = "IDARTUI";       
-        //public static string pwd = "Demo@1234";
-        //public static string pan = "AAAAA1111D";
-        //public static string actid = "IDARTUI";
-        //public static string newpwd = "Demo@123456";
-        //public static string appkey = "";
-        #endregion
-        #region uat  credentials
-        //public static string endPoint = "http://localhost:5583/NorenWClient/";
-        //public static string uid = "MOBKUMAR";
-        //public static string pwd = "Demo@1234";
-        //public static string pan = "AAAAA1111D";
-        //public static string actid = "MOBKUMAR";
-        //public static string newpwd = "Demo@123456";
-        //public static string appkey = "";
-        #endregion
-
+       
         #region dev  credentials
         public static string endPoint = "http://kurma.kambala.co.in:9957/NorenWClient/";
         public static string uid = "MOBKUMAR";
         public static string actid = "MOBKUMAR";        
-        public static string pwd = "Qaws@45678";
-        public static string pan = "AAAA45AAAA";
-        public static string dob = "03021970";
-        public static string newpwd = "Qaws@1234";
+        public static string pwd = "";
+        public static string pan = "";
+        public static string dob = "";
+        public static string newpwd = "";
         public static string appkey = "";
         #endregion
         public static bool loggedin = false;
