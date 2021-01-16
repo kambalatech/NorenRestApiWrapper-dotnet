@@ -35,7 +35,7 @@ namespace NorenRestApiWrapper
             client.DefaultRequestHeaders
                   .Accept
                   .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header         
-
+            client.DefaultRequestHeaders.ExpectContinue = false;
         }
 
         public async void makeRequest(BaseApiResponse response,string uri, string message, string key = null)
