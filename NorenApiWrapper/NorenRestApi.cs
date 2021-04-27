@@ -119,7 +119,7 @@ namespace NorenRestApiWrapper
         {
             loginReq = login;
             login.pwd = ComputeSha256Hash(login.pwd);
-            login.vc = "IDART_DESK";
+            
 
             login.appkey = ComputeSha256Hash(login.uid + "|" + login.appkey);
 
@@ -432,6 +432,28 @@ namespace NorenRestApiWrapper
         }
         #endregion
         #region feed methods
+        public bool ConnectWatcher(string uri, OnFeed marketdataHandler, OnOrderFeed orderHandler)
+        {
+            var url = new Uri(uri);
+            wsclient = new WebsocketClient(url);
+            OnFeedCallback = marketdataHandler;
+            OnOrderCallback = orderHandler;
+            wsclient.ReconnectTimeout = TimeSpan.FromSeconds(30);
+            wsclient.ReconnectionHappened.Subscribe(info =>
+                Console.WriteLine($"Reconnection happened, type: {info.Type}"));
+
+            ConnectMessage connect = new ConnectMessage();
+            connect.t = "c";
+            connect.uid = loginReq.uid;
+            connect.actid = loginReq.uid;
+            connect.susertoken = loginResp?.susertoken;
+
+            wsclient.MessageReceived.Subscribe(msg => OnWSHandler(msg));
+            wsclient.Start();
+            wsclient.Send(connect.toJson());
+            Console.WriteLine($"Add Watcher: {connect.toJson()}");
+            return true;
+        }
         public bool AddFeedDevice(string uri, OnFeed handler)
         {
             var url = new Uri(uri);
@@ -474,8 +496,7 @@ namespace NorenRestApiWrapper
 
 
         public bool SubscribeOrders(OnOrderFeed orderFeed, string account)
-        {
-            OnOrderCallback = orderFeed;
+        {            
             OrderSubscribeMessage orderSubscribe = new OrderSubscribeMessage();
             orderSubscribe.actid = account;
             wsclient.Send(orderSubscribe.toJson());
