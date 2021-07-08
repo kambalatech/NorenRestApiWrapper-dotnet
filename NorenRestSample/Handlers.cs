@@ -40,11 +40,12 @@ namespace NorenRestSample
             //we are logged in as stat is ok
 
             //subscribe to server for async messages            
-            nApi.ConnectWatcher(Program.wsendpoint, Handlers.OnFeed, Handlers.OnOrderUpdate);
-            nApi.SubscribeOrders(Handlers.OnOrderUpdate, Program.uid);
+            //nApi.ConnectWatcher(Program.wsendpoint, Handlers.OnFeed, Handlers.OnOrderUpdate);
+            //nApi.SubscribeOrders(Handlers.OnOrderUpdate, Program.uid);
+            Program.loggedin = true;
 
 
-            
+
             Program.ActionOptions();
             return;           
         }

@@ -182,7 +182,7 @@ namespace NorenRestSample
             order.uid = uid;
             order.actid = actid;
             order.exch = "NSE";
-            order.tsym = "ACC-EQ";
+            order.tsym = "M&M-EQ";
             order.qty = "10";
             order.dscqty = "0";
             order.prc = "100.5";

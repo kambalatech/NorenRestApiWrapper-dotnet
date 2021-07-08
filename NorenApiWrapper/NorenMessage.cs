@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+using System.Web;
 using static NorenApiWrapper.NorenApiHelpers;
+
 namespace NorenRestApiWrapper
 {
     #region basetypes
@@ -340,6 +342,14 @@ namespace NorenRestApiWrapper
         public string trantype3;
         public string qty3;
         public string prc3;
+        public override string toJson()
+        {
+            tsym = HttpUtility.UrlEncode(tsym);
+            tsym2 = HttpUtility.UrlEncode(tsym2);
+            tsym3 = HttpUtility.UrlEncode(tsym3);
+            remarks = HttpUtility.UrlEncode(remarks);
+            return base.toJson();
+        }
     }
     public class PlaceOrderResponse : NorenResponseMsg
     {
@@ -360,6 +370,11 @@ namespace NorenRestApiWrapper
         public string bpprc;
         public string blprc;
         public string trailprc;
+        public override string toJson()
+        {
+            tsym = HttpUtility.UrlEncode(tsym);
+            return base.toJson();
+        }
     }
     public class ModifyOrderResponse : NorenResponseMsg
     {
