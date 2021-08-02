@@ -409,9 +409,12 @@ namespace NorenRestApiWrapper
             Limits limits = new Limits();
             limits.actid = account;
             limits.uid = loginReq.uid;
-            limits.prd = product;
-            limits.seg = segment;
-            limits.exch = exchange;
+            if(product != "")
+                limits.prd = product;
+            if (segment != "")
+                limits.seg = segment;
+            if (exchange != "")
+                limits.exch = exchange;
             string uri = "Limits";
 
             rClient.makeRequest(new NorenApiResponse<LimitsResponse>(response), uri, limits.toJson(), getJKey);
