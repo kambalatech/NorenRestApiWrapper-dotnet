@@ -421,6 +421,25 @@ namespace NorenRestApiWrapper
             return true;
         }
 
+        public bool SendGetOrderMargin(OnResponse response, OrderMargin order)
+        {
+            if (loginResp == null)
+                return false;
+            string uri = "GetOrderMargin";
+            rClient.makeRequest(new NorenApiResponse<GetOrderMarginResponse>(response), uri, order.toJson(), getJKey);
+            return true;
+        }
+
+        public bool SendGetBasketMargin(OnResponse response, BasketMargin basket)
+        {
+            if (loginResp == null)
+                return false;
+            string uri = "GetBasketMargin";
+
+            rClient.makeRequest(new NorenApiResponse<GetBasketMarginResponse>(response), uri, basket.toJson(), getJKey);
+            return true;
+        }
+
         #endregion
         #region others
         public bool SendGetExchMsg(OnResponse response, ExchMsg exchmsg)
@@ -435,6 +454,22 @@ namespace NorenRestApiWrapper
         }
         #endregion
         #region feed methods
+        public bool SendGetQuote(OnResponse response, string exch, string token)
+        {
+            if (loginResp == null)
+                return false;
+            string uri = "GetQuotes";
+
+            Quote quote = new Quote();
+
+            quote.uid = loginReq.uid;
+            quote.exch = exch;
+            quote.token = token;
+
+            rClient.makeRequest(new NorenApiResponse<GetQuoteResponse>(response), uri, quote.toJson(), getJKey);
+            return true;
+        }
+
         public bool ConnectWatcher(string uri, OnFeed marketdataHandler, OnOrderFeed orderHandler)
         {
             var url = new Uri(uri);

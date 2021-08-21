@@ -194,6 +194,13 @@ namespace NorenRestApiWrapper
         public string request_time;
         public string susertoken;
         public string lastaccesstime;
+        public string spasswordreset;
+        public List<string> exarr;
+        public string uname;        
+        public List<ProductInfo> prarr;
+        public string actid;
+        public string email;
+        public string brkname;        
     }
 
     public class LogoutMessage : NorenMessage
@@ -870,5 +877,147 @@ namespace NorenRestApiWrapper
         public List<SingleOrdHistItem> history => list;
 
     }
-    
+
+    public class OrderMargin : NorenMessage
+    {
+        public string uid;
+        public string actid;
+        public string exch;
+        public string tsym;
+        public string qty;
+        public string prc;
+        public string trgprc;
+        public string dscqty;
+        public string prd;
+        public string trantype;
+        public string prctyp;
+        public string blprc;
+        public string rorgqty;
+        public string fillshares;
+        public string rorgprc;
+        public string orgtrgprc;
+        public string norenordno;
+        public string snonum;
+        public override string toJson()
+        {
+            tsym = HttpUtility.UrlEncode(tsym);
+            return base.toJson();
+        }
+    }
+    public class GetOrderMarginResponse : NorenResponseMsg
+    {
+        public string remarks;
+        public string cash;
+        public string marginused;
+    }
+    public class BasketListItem
+    {
+        public string exch;
+        public string tsym;
+        public string qty;
+        public string prc;
+        public string trgprc;
+        public string prd;
+        public string trantype;
+        public string prctyp;
+    }
+    public class BasketMargin : NorenMessage
+    {
+        public string uid;
+        public string actid;
+        public string exch;
+        public string tsym;
+        public string qty;
+        public string prc;
+        public string trgprc;
+        public string prd;
+        public string trantype;
+        public string prctyp;
+        public string blprc;
+        public string rorgqty;
+        public string fillshares;
+        public string rorgprc;
+        public string orgtrgprc;
+        public string norenordno;
+        public string snonum;
+        public List<BasketListItem> basketlists;
+        public override string toJson()
+        {
+            tsym = HttpUtility.UrlEncode(tsym);
+            foreach(BasketListItem item in basketlists)
+            {
+                item.tsym = HttpUtility.UrlEncode(tsym);
+            }
+            return base.toJson();
+        }
+    }
+    public class GetBasketMarginResponse : NorenResponseMsg
+    {
+        public string remarks;
+        public string marginused;
+        public string marginusedtrade;
+    }
+
+    public class Quote : NorenMessage
+    {
+        public string uid;
+        public string exch;
+        public string token;
+    }
+
+    public class GetQuoteResponse : NorenResponseMsg
+    {
+        public string exch;
+        public string tsym;
+        public string cname;
+        public string symname;
+        public string seg;
+        public string instname;
+        public string isin;
+        public string pp;
+        public string ls;
+        public string ti;
+        public string mult;
+        public string uc;
+        public string lc;
+        public string prcftr_d;
+        public string token;
+        public string lp;
+        public string h;
+        public string l;
+        public string v;
+        public string ltq;
+        public string ltt;
+        public string bp1;
+        public string sp1;
+        public string bp2;
+        public string sp2;
+        public string bp3;
+        public string sp3;
+        public string bp4;
+        public string sp4;
+        public string bp5;
+        public string sp5;
+        public string bq1;
+        public string sq1;
+        public string bq2;
+        public string sq2;
+        public string bq3;
+        public string sq3;
+        public string bq4;
+        public string sq4;
+        public string bq5;
+        public string sq5;
+        public string bo1;
+        public string so1;
+        public string bo2;
+        public string so2;
+        public string bo3;
+        public string so3;
+        public string bo4;
+        public string so4;
+        public string bo5;
+        public string so5;
+    }
+
 }
