@@ -166,12 +166,24 @@ namespace NorenRestApiWrapper
         public string ret;
         public string fillshares;
         public string avgprc;
+
+        public string fltm;
+        public string flid;
+        public string flqty;
+        public string flprc;
+
         public string rejreason;
         public string exchordid;
         public string cancelqty;
         public string remarks;
         public string dscqty;
         public string trgprc;
+        public string snonum;
+        public string snoordt;
+        public string blprc;
+        public string bpprc;
+        public string trailprc;
+        public string exch_tm;
     }
 
     #endregion
@@ -466,7 +478,9 @@ namespace NorenRestApiWrapper
         public string orddttm;
         public string ordenttm;
         public string extm;
-        public string request_time;
+        public string snoordt;
+        public string snonum;       
+
     }
     public class OrderBookResponse : NorenListResponseMsg<OrderBookItem>
     {
@@ -642,12 +656,18 @@ namespace NorenRestApiWrapper
     {
         public List<ScripItem> exch_tsym;
         public string holdqty;
+        public string dpqty;
+        public string npoadqty;
         public string colqty;
+        public string benqty;
+        public string unplgdqty;
+        public string brkcolqty;
         public string btstqty;
         public string btstcolqty;
         public string usedqty;
         public string upldprc;
     }
+
     public class HoldingsResponse : NorenListResponseMsg<HoldingsItem>
     {
         public List<HoldingsItem> holdings => list;
