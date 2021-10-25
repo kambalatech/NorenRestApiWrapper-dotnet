@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <Company>Kambala Solutions Pvt Ltd</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Description>16-09-2021
-* OrderbookItem updated for orderbook n order update</Description>
+    <Description>25-10-2021
+* GetQuote Open field is added
+* TPSeries call method added (intraday time price data)
+* Get Index List added</Description>
   </PropertyGroup>
 
   <ItemGroup>

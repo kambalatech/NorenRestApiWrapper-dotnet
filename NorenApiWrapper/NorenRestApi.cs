@@ -470,6 +470,47 @@ namespace NorenRestApiWrapper
             return true;
         }
 
+        public bool SendGetTPSeries(OnResponse response, string exch, string token, string starttime = null, string endtime = null)
+        {
+            if (loginResp == null)
+                return false;
+            string uri = "TPSeries";
+
+            TPSeries quote = new TPSeries();
+
+            quote.uid = loginReq.uid;
+            quote.exch = exch;
+            quote.token = token;
+            if (String.IsNullOrEmpty(starttime) != true)
+                quote.st = starttime;
+            if(String.IsNullOrEmpty(endtime) != true)
+                quote.et = endtime;
+
+            rClient.makeRequest(new NorenApiResponseList<GetTPSeriesResponse, TPSeriesItem>(response), uri, quote.toJson(), getJKey);
+            return true;
+        }
+
+        public bool SendGetIndexList(OnResponse response, string exch)
+        {
+            if (loginResp == null)
+                return false;
+            string uri = "GetIndexList";
+
+            IndexList index = new IndexList();
+
+            index.uid = loginReq.uid;
+            index.exch = exch;
+
+            rClient.makeRequest(new NorenApiResponse<GetIndexListResponse>(response), uri, index.toJson(), getJKey);
+            return true;
+        }
+
+        public bool GetDailyTPSeries(OnResponse response, string endpoint, string exch, string token, string starttime, string endtime)
+        {           
+            return true;
+        }
+
+
         public bool ConnectWatcher(string uri, OnFeed marketdataHandler, OnOrderFeed orderHandler)
         {
             var url = new Uri(uri);

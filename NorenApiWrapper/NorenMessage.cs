@@ -208,11 +208,11 @@ namespace NorenRestApiWrapper
         public string lastaccesstime;
         public string spasswordreset;
         public List<string> exarr;
-        public string uname;        
+        public string uname;
         public List<ProductInfo> prarr;
         public string actid;
         public string email;
-        public string brkname;        
+        public string brkname;
     }
 
     public class LogoutMessage : NorenMessage
@@ -260,8 +260,8 @@ namespace NorenRestApiWrapper
     }
     public class ForgotPasswordResponse : StandardResponse
     {
-        
-        
+
+
     }
 
     public class Changepwd : NorenMessage
@@ -418,8 +418,8 @@ namespace NorenRestApiWrapper
     }
     public class ExitSNOOrderResponse : StandardResponse
     {
-        
-        
+
+
     }
 
     public class ProductConversion : NorenMessage
@@ -438,7 +438,7 @@ namespace NorenRestApiWrapper
 
     public class ProductConversionResponse : StandardResponse
     {
-        
+
     }
     public class OrderBook : NorenMessage
     {
@@ -479,7 +479,7 @@ namespace NorenRestApiWrapper
         public string ordenttm;
         public string extm;
         public string snoordt;
-        public string snonum;       
+        public string snonum;
 
     }
     public class OrderBookResponse : NorenListResponseMsg<OrderBookItem>
@@ -964,7 +964,7 @@ namespace NorenRestApiWrapper
         public override string toJson()
         {
             tsym = HttpUtility.UrlEncode(tsym);
-            foreach(BasketListItem item in basketlists)
+            foreach (BasketListItem item in basketlists)
             {
                 item.tsym = HttpUtility.UrlEncode(tsym);
             }
@@ -1038,6 +1038,54 @@ namespace NorenRestApiWrapper
         public string so4;
         public string bo5;
         public string so5;
+        public string o;
+    }
+
+
+    public class TPSeries : NorenMessage
+    {
+        public string uid;
+        public string exch;
+        public string token;
+        public string st;
+        public string et;
+    }
+
+   
+    public class TPSeriesItem
+    {
+        public string time;
+        public string into;
+        public string inth;
+        public string intl;
+        public string intc;
+        public string intvwap;
+        public string intv;
+        public string v;
+        public string intoi;
+        public string oi;
+    }
+    
+    public class GetTPSeriesResponse : NorenListResponseMsg<TPSeriesItem>
+    {
+        public List<TPSeriesItem> values => list;
+
+    }
+    public class IndexList : NorenMessage
+    {
+        public string uid;
+        public string exch;        
+    }
+
+    public class IndexListItem
+    {
+        public string idxname;
+        public string token;        
+    }
+    public class GetIndexListResponse : NorenResponseMsg
+    {
+        public List<IndexListItem> values;
+        public string request_time;
     }
 
 }
