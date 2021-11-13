@@ -494,6 +494,7 @@ namespace NorenRestApiWrapper
         {
             if (loginResp == null)
                 return false;
+
             string uri = "GetIndexList";
 
             IndexList index = new IndexList();
@@ -507,6 +508,25 @@ namespace NorenRestApiWrapper
 
         public bool GetDailyTPSeries(OnResponse response, string endpoint, string exch, string token, string starttime, string endtime)
         {           
+            return true;
+        }
+
+        public bool SendGetOptionChain(OnResponse response, string exch, string tsym, string strprc, int count)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "GetOptionChain";
+
+            OptionChain options = new OptionChain();
+
+            options.uid = loginReq.uid;
+            options.exch = exch;
+            options.tsym = tsym;
+            options.strprc = strprc;
+            options.cnt = count.ToString();
+
+            rClient.makeRequest(new NorenApiResponse<OptionChainResponse>(response), uri, options.toJson(), getJKey);
             return true;
         }
 

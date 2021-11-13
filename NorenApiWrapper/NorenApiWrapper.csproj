@@ -2,13 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.9</Version>
+    <Version>1.0.11</Version>
     <Company>Kambala Solutions Pvt Ltd</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Description>25-10-2021
-* GetQuote Open field is added
-* TPSeries call method added (intraday time price data)
-* Get Index List added</Description>
+    <Description>13-11-2021
+* getoptionchain call added
+* NorenFeed Message fields updated</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -147,6 +147,13 @@ namespace NorenRestApiWrapper
         public string l;
         public string c;
         public string ap;
+        public string oi;
+        public string poi;
+        public string toi;
+        public string bq1;
+        public string bp1;
+        public string sq1;
+        public string sp1;
     }
 
     public class NorenOrderFeed : NorenStreamMessage
@@ -1087,5 +1094,38 @@ namespace NorenRestApiWrapper
         public List<IndexListItem> values;
         public string request_time;
     }
+
+    public class OptionChain : NorenMessage
+    {
+        public string uid;
+        public string exch;
+        public string tsym;
+        public string strprc;
+        public string cnt;
+        public override string toJson()
+        {
+            tsym = HttpUtility.UrlEncode(tsym);            
+            return base.toJson();
+        }
+    }
+
+    public class OptionChainItem
+    {
+        public string exch;
+        public string tsym;
+        public string token;
+        public string optt;
+        public string strprc;
+        public string pp;
+        public string ti;
+        public string ls;
+    }
+
+    public class OptionChainResponse : NorenResponseMsg
+    {
+        public List<OptionChainItem> values;
+        public string request_time;
+    }
+
 
 }
