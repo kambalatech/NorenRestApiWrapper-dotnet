@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <Company>Kambala Solutions Pvt Ltd</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Description>13-11-2021
-* getoptionchain call added
-* NorenFeed Message fields updated</Description>
+    <Description>17-11-2021
+*  NorenFeed Message added fields oi, poi and toi
+* SearchScrips Encodes text with special symbols</Description>
   </PropertyGroup>
 
   <ItemGroup>

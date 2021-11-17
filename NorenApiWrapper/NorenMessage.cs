@@ -316,6 +316,11 @@ namespace NorenRestApiWrapper
         public string uid;
         public string stext;
         public string exch;
+        public override string toJson()
+        {
+            stext = HttpUtility.UrlEncode(stext);
+            return base.toJson();
+        }
     }
     public class ScripItem
     {
@@ -1046,6 +1051,9 @@ namespace NorenRestApiWrapper
         public string bo5;
         public string so5;
         public string o;
+        public string oi;
+        public string poi;
+        public string toi;
     }
 
 
