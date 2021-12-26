@@ -62,7 +62,8 @@ namespace NorenRestApiWrapper
                 // Initialize ClientWebSocket instance and connect with Url
                 _ws = new ClientWebSocket();
                 //websocket shutting down when the timeout was reached. But then again, it also probably turns off the send of ping messages altogether.
-                _ws.Options.KeepAliveInterval = TimeSpan.Zero;
+                //https://stackoverflow.com/questions/40502921/net-websockets-forcibly-closed-despite-keep-alive-and-activity-on-the-connectio#:~:text=The%20KeepAliveInterval%20on%20the%20ClientWebSocket%20is%20set%20to,30%20seconds%20to%20the%20server%20%28visible%20in%20Wireshark%29
+                    _ws.Options.KeepAliveInterval = TimeSpan.Zero;
 
                 if (headers != null)
                 {
@@ -129,7 +130,7 @@ namespace NorenRestApiWrapper
                         if (IsConnected())
                             OnError?.Invoke("Error while recieving data. Message:  " + e.Message);
                         else
-                            OnError?.Invoke("Lost ticker connection.");
+                            OnError?.Invoke("Lost websocket connection.");
                     }
                 };
 

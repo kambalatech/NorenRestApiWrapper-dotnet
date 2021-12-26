@@ -503,13 +503,18 @@ namespace NorenRestApiWrapper
 
         public bool ConnectWatcher(string url, OnFeed marketdataHandler, OnOrderFeed orderHandler)
         {
-            wsclient = new NorenWebSocket();            
+            wsclient = new NorenWebSocket();
+            wsclient.onStreamConnectCallback = this.onStreamConnectCallback;
             wsclient.Start(url, loginReq.uid, loginResp?.susertoken, marketdataHandler, orderHandler);
 
             return true;
         }
 
-       
+        public OnStreamConnect onStreamConnectCallback
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Subscribes to the token of interest
