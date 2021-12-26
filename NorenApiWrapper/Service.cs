@@ -1,14 +1,11 @@
 ﻿using System;
-using System.IO;            //Needs to be added
-using System.Net;           //Needs to be added
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;          //Needs to be added
-using Websocket.Client;
 
 namespace NorenRestApiWrapper
 {
-    
+
     public class RESTClient
     {
         private HttpClient client = new HttpClient();

@@ -113,9 +113,19 @@ namespace NorenRestApiWrapper
         public string susertoken;
     }
 
-    public class SubsTouchline : NorenStreamMessage
+    public class SubscribeTouchline : NorenStreamMessage
     {
-        public SubsTouchline()
+        public SubscribeTouchline()
+        {
+            t = "t";
+        }
+        public string k;
+
+    }
+
+    public class SubscribeDepth : NorenStreamMessage
+    {
+        public SubscribeDepth()
         {
             t = "d";
         }

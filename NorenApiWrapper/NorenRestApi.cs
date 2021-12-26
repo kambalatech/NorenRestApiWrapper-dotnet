@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
 using System;
 using System.Text;
-using Websocket.Client;
 using System.Security.Cryptography;
 
 
@@ -26,14 +25,12 @@ namespace NorenRestApiWrapper
     public class NorenRestApi
     {
         RESTClient rClient;
-        WebsocketClient wsclient;
+        NorenWebSocket wsclient;
         
         LoginResponse loginResp;
         LoginMessage loginReq;
-        public OnFeed OnFeedCallback;
-        public OnOrderFeed OnOrderCallback;
-        public OnStreamConnect onStreamConnectCallback;
 
+        
         public OnResponse SessionCloseCallback
         {
             set
@@ -54,35 +51,7 @@ namespace NorenRestApiWrapper
             }
         }
         #region response handlers
-        private void OnWSHandler(ResponseMessage msg)
-        {
-            NorenStreamMessage wsmsg;
-            try
-            {
-                wsmsg = JsonConvert.DeserializeObject<NorenStreamMessage>(msg.Text);
-                if(wsmsg.t =="ck")
-                {
-                    onStreamConnectCallback?.Invoke(wsmsg);
-                }
-                else if (wsmsg.t == "om" || wsmsg.t == "ok")
-                {
-                    NorenOrderFeed ordermsg = JsonConvert.DeserializeObject<NorenOrderFeed>(msg.Text);
-                    OnOrderCallback?.Invoke(ordermsg);
-                }
-                else
-                { 
-                    NorenFeed feedmsg = JsonConvert.DeserializeObject<NorenFeed>(msg.Text);
-                    OnFeedCallback?.Invoke(feedmsg);
-                }
-            }
-            catch (JsonReaderException ex)
-            {
-                Console.WriteLine($"Error deserializing data {ex.ToString()}");
-                return;
-            }
-            
-            //
-        }
+        
         internal void OnLoginResponseNotify(NorenResponseMsg responseMsg)
         {
             loginResp = responseMsg as LoginResponse;
@@ -530,52 +499,18 @@ namespace NorenRestApiWrapper
             return true;
         }
 
+        #endregion
 
-        public bool ConnectWatcher(string uri, OnFeed marketdataHandler, OnOrderFeed orderHandler)
+        public bool ConnectWatcher(string url, OnFeed marketdataHandler, OnOrderFeed orderHandler)
         {
-            var url = new Uri(uri);
-            wsclient = new WebsocketClient(url);
-            OnFeedCallback = marketdataHandler;
-            OnOrderCallback = orderHandler;
-            wsclient.ReconnectTimeout = TimeSpan.FromSeconds(30);
-            wsclient.ReconnectionHappened.Subscribe(info =>
-                Console.WriteLine($"Reconnection happened, type: {info.Type}"));
+            wsclient = new NorenWebSocket();            
+            wsclient.Start(url, loginReq.uid, loginResp?.susertoken, marketdataHandler, orderHandler);
 
-            ConnectMessage connect = new ConnectMessage();
-            connect.t = "c";
-            connect.uid = loginReq.uid;
-            connect.actid = loginReq.uid;
-            connect.susertoken = loginResp?.susertoken;
-
-            wsclient.MessageReceived.Subscribe(msg => OnWSHandler(msg));
-            wsclient.Start();
-            wsclient.Send(connect.toJson());
-            Console.WriteLine($"Add Watcher: {connect.toJson()}");
             return true;
         }
-        public bool AddFeedDevice(string uri, OnFeed handler)
-        {
-            var url = new Uri(uri);
-            wsclient = new WebsocketClient(url);
 
-            OnFeedCallback = handler;
+       
 
-            wsclient.ReconnectTimeout = TimeSpan.FromSeconds(30);
-            wsclient.ReconnectionHappened.Subscribe(info =>
-                Console.WriteLine($"Reconnection happened, type: {info.Type}"));
-
-            ConnectMessage connect = new ConnectMessage();
-            connect.t = "c";
-            connect.uid = loginReq.uid;
-            connect.actid = loginReq.uid;
-            connect.susertoken = loginResp?.susertoken;
-
-            wsclient.MessageReceived.Subscribe(msg => OnWSHandler(msg));
-            wsclient.Start();
-            wsclient.Send(connect.toJson());
-            Console.WriteLine($"Add Feed Device: {connect.toJson()}");
-            return true;
-        }
         /// <summary>
         /// Subscribes to the token of interest
         /// </summary>
@@ -584,7 +519,7 @@ namespace NorenRestApiWrapper
         /// <returns></returns>
         public bool SubscribeToken(string exch, string token)
         {
-            SubsTouchline subs = new SubsTouchline();
+            SubscribeTouchline subs = new SubscribeTouchline();
 
             subs.k = exch + "|" + token;
 
@@ -593,6 +528,22 @@ namespace NorenRestApiWrapper
             return true;
         }
 
+        /// <summary>
+        /// Subscribes to the token of interest
+        /// </summary>
+        /// <param name="exch"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public bool SubscribeTokenDepth(string exch, string token)
+        {
+            SubscribeDepth subs = new SubscribeDepth();
+
+            subs.k = exch + "|" + token;
+
+            wsclient.Send(subs.toJson());
+            Console.WriteLine($"Sub Token Depth: {subs.toJson()}");
+            return true;
+        }
 
         public bool SubscribeOrders(OnOrderFeed orderFeed, string account)
         {            
@@ -603,7 +554,7 @@ namespace NorenRestApiWrapper
             Console.WriteLine($"Sub Order: {orderSubscribe.toJson()}");
             return true;
         }
-        #endregion
+        
         
     }
 }

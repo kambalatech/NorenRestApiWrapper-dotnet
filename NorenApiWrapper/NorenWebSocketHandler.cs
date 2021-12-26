@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
-using Websocket.Client;
-
-namespace NorenRestApiWrapper
+﻿namespace NorenRestApiWrapper
 {
     public delegate void OnStreamMesssage(NorenStreamMessage Feed);
     public class BaseWSMessage
     {
-        public virtual void OnMessageNotify(ResponseMessage msg, string data)
+        public virtual void OnMessageNotify(byte[] Data, int Count, string MessageType)
         {
 
         }
@@ -20,4 +17,5 @@ namespace NorenRestApiWrapper
         }
 
     }
+
 }
