@@ -110,8 +110,10 @@ namespace NorenRestApiWrapper
             return true;
         }
 
-        public bool SetSession(string uid, string pwd, string usertoken)
+        public bool SetSession(string endpoint, string uid, string pwd, string usertoken)
         {
+            rClient.endPoint = endpoint;
+
             loginReq = new LoginMessage();
             loginReq.uid = uid;
             loginReq.pwd = pwd;
