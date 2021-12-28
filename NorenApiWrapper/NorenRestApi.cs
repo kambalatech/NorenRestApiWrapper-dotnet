@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 using System.Security.Cryptography;
-
+using System.Collections.Generic;
 
 namespace NorenRestApiWrapper
 {
@@ -42,6 +42,14 @@ namespace NorenRestApiWrapper
         {            
             rClient = new RESTClient();            
         }
+
+        public string UserToken
+        {
+            get
+            {
+                return loginResp?.susertoken;
+            }
+        } 
 
         private string getJKey
         {
@@ -99,6 +107,20 @@ namespace NorenRestApiWrapper
 
 
             rClient.makeRequest(ResponseHandler, uri, login.toJson());
+            return true;
+        }
+
+        public bool SetSession(string uid, string pwd, string usertoken)
+        {
+            loginReq = new LoginMessage();
+            loginReq.uid = uid;
+            loginReq.pwd = pwd;
+            loginReq.source = "API";
+
+            loginResp = new LoginResponse();                      
+            loginResp.actid = uid;
+            loginResp.susertoken = usertoken;
+
             return true;
         }
         /// <summary>
@@ -549,6 +571,57 @@ namespace NorenRestApiWrapper
             Console.WriteLine($"Sub Token Depth: {subs.toJson()}");
             return true;
         }
+
+        /// <summary>
+        /// Subscribes to the token of interest
+        /// </summary>
+        /// <param name="exch"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public bool UnSubscribeToken(string exch, string token)
+        {
+            UnSubscribeTouchline subs = new UnSubscribeTouchline();
+
+            subs.k = exch + "|" + token;
+
+            wsclient.Send(subs.toJson());
+            Console.WriteLine($"UnSub Token: {subs.toJson()}");
+            return true;
+        }
+
+        /// <summary>
+        /// Subscribes to the token of interest
+        /// </summary>
+        /// <param name="exch"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public bool UnSubscribeTokenDepth(string exch, string token)
+        {
+            UnSubscribeDepth subs = new UnSubscribeDepth();
+
+            subs.k = exch + "|" + token;
+
+            wsclient.Send(subs.toJson());
+            Console.WriteLine($"UnSub Token Depth: {subs.toJson()}");
+            return true;
+        }
+
+        public bool UnSubscribe(List<Quote> tokenlist)
+        {
+            UnSubscribeTouchline subs = new UnSubscribeTouchline();
+            subs.k = String.Empty;
+            foreach (var quote in tokenlist)
+            {
+                if(String.IsNullOrEmpty(subs.k))
+                    subs.k = quote.exch + "|" + quote.token;
+                else
+                    subs.k += "#" + quote.exch + "|" + quote.token;
+            }
+            wsclient.Send(subs.toJson());
+            Console.WriteLine($"UnSub Token: {subs.toJson()}");
+            return true;
+        }
+
 
         public bool SubscribeOrders(OnOrderFeed orderFeed, string account)
         {            

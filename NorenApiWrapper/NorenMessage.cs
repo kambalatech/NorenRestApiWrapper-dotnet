@@ -133,6 +133,26 @@ namespace NorenRestApiWrapper
 
     }
 
+    public class UnSubscribeTouchline : NorenStreamMessage
+    {
+        public UnSubscribeTouchline()
+        {
+            t = "u";
+        }
+        public string k;
+
+    }
+
+    public class UnSubscribeDepth : NorenStreamMessage
+    {
+        public UnSubscribeDepth()
+        {
+            t = "ud";
+        }
+        public string k;
+
+    }
+
     public class OrderSubscribeMessage : NorenStreamMessage
     {
         public OrderSubscribeMessage()
