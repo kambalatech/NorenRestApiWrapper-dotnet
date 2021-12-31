@@ -463,7 +463,7 @@ namespace NorenRestApiWrapper
             return true;
         }
 
-        public bool SendGetTPSeries(OnResponse response, string exch, string token, string starttime = null, string endtime = null)
+        public bool SendGetTPSeries(OnResponse response, string exch, string token, string starttime = null, string endtime = null, string interval = null)
         {
             if (loginResp == null)
                 return false;
@@ -478,6 +478,8 @@ namespace NorenRestApiWrapper
                 quote.st = starttime;
             if(String.IsNullOrEmpty(endtime) != true)
                 quote.et = endtime;
+            if (String.IsNullOrEmpty(interval) != true)
+                quote.intrv = endtime;
 
             rClient.makeRequest(new NorenApiResponseList<GetTPSeriesResponse, TPSeriesItem>(response), uri, quote.toJson(), getJKey);
             return true;

@@ -1094,6 +1094,7 @@ namespace NorenRestApiWrapper
         public string token;
         public string st;
         public string et;
+        public string intrv;
     }
 
    
