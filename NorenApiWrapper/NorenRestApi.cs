@@ -560,6 +560,48 @@ namespace NorenRestApiWrapper
         }
 
         /// <summary>
+        /// Subscribe 
+        /// </summary>
+        /// <param name="tokenlist"></param>
+        /// <returns></returns>
+        public bool SubscribeToken(List<Quote> tokenlist)
+        {
+            SubscribeTouchline subs = new SubscribeTouchline();
+            subs.k = String.Empty;
+            foreach (var quote in tokenlist)
+            {
+                if (String.IsNullOrEmpty(subs.k))
+                    subs.k = quote.exch + "|" + quote.token;
+                else
+                    subs.k += "#" + quote.exch + "|" + quote.token;
+            }
+            wsclient.Send(subs.toJson());
+            Console.WriteLine($"Sub Token: {subs.toJson()}");
+            return true;
+        }
+
+        /// <summary>
+        /// Subscribe 
+        /// </summary>
+        /// <param name="tokenlist"></param>
+        /// <returns></returns>
+        public bool SubscribeTokenDepth(List<Quote> tokenlist)
+        {
+            SubscribeDepth subs = new SubscribeDepth();
+            subs.k = String.Empty;
+            foreach (var quote in tokenlist)
+            {
+                if (String.IsNullOrEmpty(subs.k))
+                    subs.k = quote.exch + "|" + quote.token;
+                else
+                    subs.k += "#" + quote.exch + "|" + quote.token;
+            }
+            wsclient.Send(subs.toJson());
+            Console.WriteLine($"Sub Depth: {subs.toJson()}");
+            return true;
+        }
+
+        /// <summary>
         /// Subscribes to the token of interest
         /// </summary>
         /// <param name="exch"></param>
