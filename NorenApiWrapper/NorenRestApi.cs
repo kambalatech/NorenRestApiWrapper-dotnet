@@ -20,7 +20,9 @@ namespace NorenRestApiWrapper
     /// only after this call back feed and orders are to be subscribed
     /// </summary>
     /// <param name="msg"></param>
-    public delegate void OnStreamConnect(NorenStreamMessage msg);
+    public delegate void OnStreamConnect(NorenStreamMessage msg);    
+    public delegate void OnCloseHandler();
+    public delegate void OnErrorHandler(string Message);
 
     public class NorenRestApi
     {
@@ -531,12 +533,31 @@ namespace NorenRestApiWrapper
         {
             wsclient = new NorenWebSocket();
             wsclient.onStreamConnectCallback = this.onStreamConnectCallback;
+            wsclient.onStreamCloseCallback = this.onStreamCloseCallback;
+            wsclient.onStreamErrorCallback = this.onStreamErrorCallback;
+
             wsclient.Start(url, loginReq.uid, loginResp?.susertoken, marketdataHandler, orderHandler);
 
             return true;
         }
 
+        public void CloseWatcher()
+        {
+            wsclient?.Stop();            
+        }
+
         public OnStreamConnect onStreamConnectCallback
+        {
+            get;
+            set;
+        }
+       
+        public OnCloseHandler onStreamCloseCallback
+        {
+            get;
+            set;
+        }
+        public OnErrorHandler onStreamErrorCallback
         {
             get;
             set;

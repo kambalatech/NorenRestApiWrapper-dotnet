@@ -11,6 +11,9 @@ namespace NorenRestApiWrapper
         string _endpoint;
 
         public OnStreamConnect onStreamConnectCallback;
+        public OnCloseHandler onStreamCloseCallback;
+        public OnErrorHandler onStreamErrorCallback;
+
         public OnFeed OnFeedCallback;
         public OnOrderFeed OnOrderCallback;
 
@@ -37,15 +40,22 @@ namespace NorenRestApiWrapper
             
             _ws.Connect(_endpoint);
         }
+
+        public void Stop()
+        {
+            _ws.Close();
+        }
         
         private void _onError(string Message)
         {
             Console.WriteLine($"Error websocket: {Message}");
+            onStreamErrorCallback?.Invoke(Message);
         }
 
         private void _onClose()
         {            
             Console.WriteLine("websocket closed");
+            onStreamCloseCallback?.Invoke();
         }
 
         private void _onConnect()
@@ -109,6 +119,7 @@ namespace NorenRestApiWrapper
             catch (JsonReaderException ex)
             {
                 Console.WriteLine($"Error deserializing data {ex.ToString()}");
+                onStreamErrorCallback?.Invoke(ex.ToString());
                 return;
             }           
         }

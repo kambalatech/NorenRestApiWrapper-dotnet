@@ -10,8 +10,8 @@ namespace NorenRestApiWrapper
 {
     // Delegates for events
     public delegate void OnConnectHandler();
-    public delegate void OnCloseHandler();
-    public delegate void OnErrorHandler(string Message);
+    //public delegate void OnCloseHandler();
+    //public delegate void OnErrorHandler(string Message);
     public delegate void OnDataHandler(byte[] Data, int Count, string MessageType);
 
     /// <summary>
@@ -63,7 +63,7 @@ namespace NorenRestApiWrapper
                 _ws = new ClientWebSocket();
                 //websocket shutting down when the timeout was reached. But then again, it also probably turns off the send of ping messages altogether.
                 //https://stackoverflow.com/questions/40502921/net-websockets-forcibly-closed-despite-keep-alive-and-activity-on-the-connectio#:~:text=The%20KeepAliveInterval%20on%20the%20ClientWebSocket%20is%20set%20to,30%20seconds%20to%20the%20server%20%28visible%20in%20Wireshark%29
-                    _ws.Options.KeepAliveInterval = TimeSpan.Zero;
+                _ws.Options.KeepAliveInterval = TimeSpan.Zero;
 
                 if (headers != null)
                 {
