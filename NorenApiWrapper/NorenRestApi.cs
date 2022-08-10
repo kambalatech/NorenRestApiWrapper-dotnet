@@ -481,7 +481,7 @@ namespace NorenRestApiWrapper
             if(String.IsNullOrEmpty(endtime) != true)
                 quote.et = endtime;
             if (String.IsNullOrEmpty(interval) != true)
-                quote.intrv = endtime;
+                quote.intrv = interval;
 
             rClient.makeRequest(new NorenApiResponseList<GetTPSeriesResponse, TPSeriesItem>(response), uri, quote.toJson(), getJKey);
             return true;
