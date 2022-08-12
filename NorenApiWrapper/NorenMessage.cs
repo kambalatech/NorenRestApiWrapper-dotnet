@@ -233,6 +233,7 @@ namespace NorenRestApiWrapper
         public string qty;
         public string prc;
         public string prd;
+        public string pcode;
         public string status;
         public string reporttype;
         public string trantype;
