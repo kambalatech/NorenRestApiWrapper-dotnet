@@ -23,7 +23,8 @@ namespace NorenRestApiWrapper
     public delegate void OnStreamConnect(NorenStreamMessage msg);    
     public delegate void OnCloseHandler();
     public delegate void OnErrorHandler(string Message);
-
+    public delegate void OnReconnectHandler();
+    public delegate void OnNoReconnectHandler();
     public class NorenRestApi
     {
         RESTClient rClient;
@@ -575,9 +576,9 @@ namespace NorenRestApiWrapper
 
             subs.k = exch + "|" + token;
 
-            wsclient.Send(subs.toJson());
+            var ret = wsclient.Send(subs.toJson());
             Console.WriteLine($"Sub Token: {subs.toJson()}");
-            return true;
+            return ret;
         }
 
         /// <summary>
@@ -596,9 +597,9 @@ namespace NorenRestApiWrapper
                 else
                     subs.k += "#" + quote.exch + "|" + quote.token;
             }
-            wsclient.Send(subs.toJson());
+            var ret = wsclient.Send(subs.toJson());
             Console.WriteLine($"Sub Token: {subs.toJson()}");
-            return true;
+            return ret;
         }
 
         /// <summary>
@@ -634,9 +635,9 @@ namespace NorenRestApiWrapper
 
             subs.k = exch + "|" + token;
 
-            wsclient.Send(subs.toJson());
+            var ret = wsclient.Send(subs.toJson());
             Console.WriteLine($"Sub Token Depth: {subs.toJson()}");
-            return true;
+            return ret;
         }
 
         /// <summary>
@@ -651,9 +652,9 @@ namespace NorenRestApiWrapper
 
             subs.k = exch + "|" + token;
 
-            wsclient.Send(subs.toJson());
+            var ret = wsclient.Send(subs.toJson());
             Console.WriteLine($"UnSub Token: {subs.toJson()}");
-            return true;
+            return ret;
         }
 
         /// <summary>
@@ -684,9 +685,9 @@ namespace NorenRestApiWrapper
                 else
                     subs.k += "#" + quote.exch + "|" + quote.token;
             }
-            wsclient.Send(subs.toJson());
+            var ret = wsclient.Send(subs.toJson());
             Console.WriteLine($"UnSub Token: {subs.toJson()}");
-            return true;
+            return ret;
         }
 
 
@@ -694,10 +695,10 @@ namespace NorenRestApiWrapper
         {            
             OrderSubscribeMessage orderSubscribe = new OrderSubscribeMessage();
             orderSubscribe.actid = account;
-            wsclient.Send(orderSubscribe.toJson());
+            var ret = wsclient.Send(orderSubscribe.toJson());
 
             Console.WriteLine($"Sub Order: {orderSubscribe.toJson()}");
-            return true;
+            return ret;
         }
         
         
