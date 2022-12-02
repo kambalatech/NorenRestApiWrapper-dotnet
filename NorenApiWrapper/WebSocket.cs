@@ -130,7 +130,9 @@ namespace NorenRestApiWrapper
                         if (IsConnected())
                             OnError?.Invoke("Error while recieving data. Message:  " + e.Message);
                         else
+                        { 
                             OnError?.Invoke("Lost websocket connection.");
+                        }
                     }
                 };
 
