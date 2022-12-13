@@ -29,6 +29,8 @@ namespace NorenRestApiWrapper
 
         private System.Timers.Timer _timer;
         private int _timerTick = 5;
+        private int _Heartbeatinterval = 1 * 60; //1 min
+        private int _HearbeatTick = (1*60) /5; //heartbeat interval /timer
 
         #region initialize
         public NorenWebSocket()
@@ -104,6 +106,16 @@ namespace NorenRestApiWrapper
             Console.WriteLine($"Create Session: {connect.toJson()}");
         }
 
+        private void _onHeartbeat()
+        {
+            //heartbeat messge to prevent disconnections
+            NorenStreamMessage hb = new NorenStreamMessage();
+            hb.t = "h";
+            _ws.Send(hb.toJson());
+            Console.WriteLine($"ping: {hb.toJson()}");
+            _HearbeatTick = _Heartbeatinterval / 5;
+        }
+
         /// <summary>
         /// Tells whether websocket is connected to server not.
         /// </summary>
@@ -115,7 +127,17 @@ namespace NorenRestApiWrapper
         private void _onTimerTick(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (IsConnected)
+            {
+                _HearbeatTick--;
+
+                if (_HearbeatTick < 0)
+                { 
+                    _onHeartbeat();
+
+                }
                 return;
+            }
+                
             // For each timer tick count is reduced. If count goes below 0 then reconnection is triggered.
 
             _timerTick--;
