@@ -437,6 +437,38 @@ namespace NorenRestApiWrapper
         }
 
         #endregion
+        #region calculators
+        public bool SendSpanCalculator(OnResponse response, string account, List<PositionItem> positions)
+        {
+            if (loginResp == null)
+                return false;
+
+            SpanCalc spanCalc = new SpanCalc();
+            spanCalc.actid = account;
+            spanCalc.pos = positions;
+
+            string uri = "SpanCalc";
+            rClient.makeRequest(new NorenApiResponse<SpanCalcResponse>(response), uri, spanCalc.toJson(), getJKey);
+            return true;
+        }
+        public bool SendGetOptionGreek(OnResponse response, string expiry, string strike_price, string spot_price, string int_rate, string volatility, string option_type)
+        {
+            if (loginResp == null)
+                return false;
+
+            OptionGreek optGreeks = new OptionGreek();
+            optGreeks.exd = expiry;
+            optGreeks.strprc = strike_price;
+            optGreeks.sptprc = spot_price;
+            optGreeks.int_rate = int_rate;
+            optGreeks.volatility = volatility;
+            optGreeks.optt = option_type;
+
+            string uri = "GetOptionGreek";
+            rClient.makeRequest(new NorenApiResponse<StandardResponse>(response), uri, optGreeks.toJson(), getJKey);
+            return true;
+        }
+        #endregion
         #region others
         public bool SendGetExchMsg(OnResponse response, ExchMsg exchmsg)
         {

@@ -1205,5 +1205,58 @@ namespace NorenRestApiWrapper
         public string request_time;
     }
 
+    public class PositionItem
+    {
+        public string exch;
+        public string instname;
+        public string symname;
+        public string exd;
+        public string optt;
+        public string strprc;
+        public string buyqty;
+        public string sellqty;
+        public string netqty;
+    }
+
+    public class SpanCalc : NorenMessage
+    {
+        public string actid;
+        public List<PositionItem> pos;        
+    }
+
+    public class SpanCalcResponse : NorenResponseMsg
+    {
+        public string span;
+        public string expo;
+        public string span_trade;
+        public string expo_trade;
+    }
+
+    public class OptionGreek : NorenMessage
+    {
+        public string exd;
+        public string strprc;
+        public string sptprc;
+        public string int_rate;
+        public string volatility;
+        public string optt;
+    }
+
+    public class OptionGreekResponse : NorenResponseMsg
+    {
+        public string cal_price;
+        public string put_price;
+        public string cal_delta;
+        public string put_delta;
+        public string cal_gamma;
+        public string put_gamma;
+        public string cal_theta;
+        public string put_theta;
+        public string cal_rho;
+        public string put_rho;
+        public string cal_vega;
+        public string put_vega;
+        public string request_time;
+    }
 
 }
