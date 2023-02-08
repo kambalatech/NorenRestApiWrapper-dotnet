@@ -186,40 +186,40 @@ namespace NorenRestApiWrapper
         public string tsq;
         public string bq1;
         public string bq2;
-		public string bq3;
-		public string bq4;
-		public string bq5;
-		public string bp1;
-		public string bp2;
-		public string bp3;
-		public string bp4;
-		public string bp5;
-		public string bo1;
-		public string bo2;
-		public string bo3;
-		public string bo4;
-		public string bo5;
-		public string sq1;
-		public string sq2;
-		public string sq3;
-		public string sq4;
-		public string sq5;
-		public string sp1;
-		public string sp2;
-		public string sp3;
-		public string sp4;
-		public string sp5;
-		public string so1;
-		public string so2;
-		public string so3;
-		public string so4;
-		public string so5;
-		public string lc;
-		public string uc;
+        public string bq3;
+        public string bq4;
+        public string bq5;
+        public string bp1;
+        public string bp2;
+        public string bp3;
+        public string bp4;
+        public string bp5;
+        public string bo1;
+        public string bo2;
+        public string bo3;
+        public string bo4;
+        public string bo5;
+        public string sq1;
+        public string sq2;
+        public string sq3;
+        public string sq4;
+        public string sq5;
+        public string sp1;
+        public string sp2;
+        public string sp3;
+        public string sp4;
+        public string sp5;
+        public string so1;
+        public string so2;
+        public string so3;
+        public string so4;
+        public string so5;
+        public string lc;
+        public string uc;
         [JsonProperty(PropertyName = "52h")]
         public string h52;
         [JsonProperty(PropertyName = "52l")]
-        public string l52;        
+        public string l52;
         public string ft;
     }
 
@@ -326,7 +326,7 @@ namespace NorenRestApiWrapper
         public string uprev;
         public string request_time;
     }
-    
+
     public class ForgotPassword : NorenMessage
     {
         public string uid;
@@ -1136,7 +1136,7 @@ namespace NorenRestApiWrapper
         public string intrv;
     }
 
-   
+
     public class TPSeriesItem
     {
         public string time;
@@ -1150,7 +1150,7 @@ namespace NorenRestApiWrapper
         public string intoi;
         public string oi;
     }
-    
+
     public class GetTPSeriesResponse : NorenListResponseMsg<TPSeriesItem>
     {
         public List<TPSeriesItem> values => list;
@@ -1159,13 +1159,13 @@ namespace NorenRestApiWrapper
     public class IndexList : NorenMessage
     {
         public string uid;
-        public string exch;        
+        public string exch;
     }
 
     public class IndexListItem
     {
         public string idxname;
-        public string token;        
+        public string token;
     }
     public class GetIndexListResponse : NorenResponseMsg
     {
@@ -1182,7 +1182,7 @@ namespace NorenRestApiWrapper
         public string cnt;
         public override string toJson()
         {
-            tsym = HttpUtility.UrlEncode(tsym);            
+            tsym = HttpUtility.UrlEncode(tsym);
             return base.toJson();
         }
     }
@@ -1221,7 +1221,7 @@ namespace NorenRestApiWrapper
     public class SpanCalc : NorenMessage
     {
         public string actid;
-        public List<PositionItem> pos;        
+        public List<PositionItem> pos;
     }
 
     public class SpanCalcResponse : NorenResponseMsg
@@ -1259,4 +1259,30 @@ namespace NorenRestApiWrapper
         public string request_time;
     }
 
+
+    public class SingleOrder : NorenMessage
+    {
+        public string uid;
+        public string actid;
+        public string exch;
+        public string tsym;
+        public string qty;
+        public string prc;
+        public string prd;
+        public string trantype;
+    }
+
+    public class BrokerageResponse : NorenResponseMsg
+    {
+        public string brkage_amt;
+        public string stt_amt;
+        public string exch_chrg;
+        public string sebi_chrg;
+        public string stamp_duty;
+        public string clr_chrg;
+        public string gst;
+        public string tot_chrg;
+        public string remarks;
+        public string url;
+    }
 }

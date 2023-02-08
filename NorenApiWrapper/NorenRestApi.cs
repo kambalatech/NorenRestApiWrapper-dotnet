@@ -480,6 +480,40 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponseList<ExchMsgResponse, ExchMsgItem>(response), uri, exchmsg.toJson(), getJKey);
             return true;
         }
+
+        public bool SendGetBrokerage(OnResponse response, string trantype, string exch, string tsym, string qty, string price, string prd)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "GetBrokerage";
+
+            PlaceOrder order = new PlaceOrder();
+            order.uid = loginReq.uid;
+            order.actid = loginReq.uid;
+            order.exch = exch;
+            order.tsym = tsym;
+            order.qty = qty;
+            order.prc = price;
+            order.prd = prd;
+
+            rClient.makeRequest(new NorenApiResponse<BrokerageResponse>(response), uri, order.toJson(), getJKey);
+            return true;
+        }
+        public bool SendGetBrokerage(OnResponse response, SingleOrder order)
+        {
+            if (loginResp == null)
+                return false;
+
+            string uri = "GetBrokerage";
+
+            
+            order.uid = loginReq.uid;
+            order.actid = loginReq.uid;
+            
+            rClient.makeRequest(new NorenApiResponse<BrokerageResponse>(response), uri, order.toJson(), getJKey);
+            return true;
+        }
         #endregion
         #region feed methods
         public bool SendGetQuote(OnResponse response, string exch, string token)
