@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
-using NorenApiWrapper;
+﻿using NorenApiWrapper;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Web;
 using static NorenApiWrapper.NorenApiHelpers;
 
@@ -20,9 +21,10 @@ namespace NorenRestApiWrapper
             string json = string.Empty;
             try
             {
-                json = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+                object obj = this;
+                json = JsonSerializer.Serialize(obj, new JsonSerializerOptions() { IgnoreNullValues = true , IncludeFields = true});
             }
-            catch (JsonSerializationException ex)
+            catch (JsonException ex)
             {
                 Console.WriteLine($"Error deserializing data {ex.ToString()}");
                 return null;
@@ -38,7 +40,8 @@ namespace NorenRestApiWrapper
     {
         public virtual string toJson()
         {
-            string json = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            object obj = this;
+            string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions() { IncludeFields = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault }); ;
             string prefix = "jData=";
             return prefix + json;
         }
@@ -99,7 +102,8 @@ namespace NorenRestApiWrapper
         public string t;
         public virtual string toJson()
         {
-            string json = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            object obj = this;
+            string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
             Debug.WriteLine(json);
             return json;
         }
@@ -216,9 +220,9 @@ namespace NorenRestApiWrapper
         public string so5;
         public string lc;
         public string uc;
-        [JsonProperty(PropertyName = "52h")]
+        [JsonPropertyName(name: "52h")]
         public string h52;
-        [JsonProperty(PropertyName = "52l")]
+        [JsonPropertyName(name: "52l")]
         public string l52;
         public string ft;
     }

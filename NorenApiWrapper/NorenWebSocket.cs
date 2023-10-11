@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using System.Text.Json;
 
 namespace NorenRestApiWrapper
 {
@@ -200,7 +200,7 @@ namespace NorenRestApiWrapper
         public static T Deserialize<T>(byte[] data, int count) where T : class
         {
             string str = System.Text.Encoding.UTF8.GetString(data, 0, count);
-            return JsonConvert.DeserializeObject<T>(str);
+            return JsonSerializer.Deserialize<T>(str);
         }
 
         private void _onData(byte[] Data, int Count, string MessageType)
@@ -228,7 +228,7 @@ namespace NorenRestApiWrapper
                     OnFeedCallback?.Invoke(feedmsg);
                 }
             }
-            catch (JsonReaderException ex)
+            catch (JsonException ex)
             {
                 Console.WriteLine($"Error deserializing data {ex.ToString()}");
                 onStreamErrorCallback?.Invoke(ex.ToString());

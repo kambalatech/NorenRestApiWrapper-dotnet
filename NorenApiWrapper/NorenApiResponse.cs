@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 
 namespace NorenRestApiWrapper
 {
@@ -22,7 +21,7 @@ namespace NorenRestApiWrapper
 
             try
             {
-                msg = JsonConvert.DeserializeObject<NorenResponseMsg>(data);
+                msg = JsonSerializer.Deserialize<NorenResponseMsg>(data);
             }
             catch (Exception ex)
             {
@@ -60,7 +59,7 @@ namespace NorenRestApiWrapper
                     if(data[0] == '[')
                     {
                         //json lists begin with [
-                        Message.list = JsonConvert.DeserializeObject<List<U>>(data);
+                        Message.list = JsonSerializer.Deserialize<List<U>>(data);
                         Message.stat = "Ok";
                         Message.request_time = "";
                         Message.emsg = "";
@@ -76,7 +75,7 @@ namespace NorenRestApiWrapper
                     }
 
                 }
-                catch (JsonReaderException ex)
+                catch (JsonException ex)
                 {
                     Console.WriteLine($"Message Received {data}");
                     Console.WriteLine($"Error deserializing data {ex.ToString()}");
@@ -96,7 +95,7 @@ namespace NorenRestApiWrapper
 
                 try
                 {
-                    msg = JsonConvert.DeserializeObject<NorenResponseMsg>(data);
+                    msg = JsonSerializer.Deserialize<NorenResponseMsg>(data);
                 }
                 catch (Exception ex)
                 {
@@ -141,11 +140,11 @@ namespace NorenRestApiWrapper
             {
                 try
                 {                    
-                    Message = JsonConvert.DeserializeObject<T>(data);
+                    Message = JsonSerializer.Deserialize<T>(data);
                     ResponseNotifyInstance?.Invoke(Message);
                     ResponseHandler(Message, true);                    
                 } 
-                catch(JsonReaderException  ex)
+                catch(JsonException  ex)
                 {
                     Console.WriteLine($"Error deserializing data {ex.ToString()}");
                     return;
