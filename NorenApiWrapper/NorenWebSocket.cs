@@ -200,7 +200,7 @@ namespace NorenRestApiWrapper
         public static T Deserialize<T>(byte[] data, int count) where T : class
         {
             string str = System.Text.Encoding.UTF8.GetString(data, 0, count);
-            return JsonSerializer.Deserialize<T>(str);
+            return JsonSerializer.Deserialize<T>(str,  new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
         }
 
         private void _onData(byte[] Data, int Count, string MessageType)

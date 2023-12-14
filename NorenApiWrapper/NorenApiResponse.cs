@@ -21,7 +21,7 @@ namespace NorenRestApiWrapper
 
             try
             {
-                msg = JsonSerializer.Deserialize<NorenResponseMsg>(data);
+                msg = JsonSerializer.Deserialize<NorenResponseMsg>(data,  new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
             }
             catch (Exception ex)
             {
@@ -59,7 +59,7 @@ namespace NorenRestApiWrapper
                     if(data[0] == '[')
                     {
                         //json lists begin with [
-                        Message.list = JsonSerializer.Deserialize<List<U>>(data);
+                        Message.list = JsonSerializer.Deserialize<List<U>>(data,  new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
                         Message.stat = "Ok";
                         Message.request_time = "";
                         Message.emsg = "";
@@ -95,7 +95,7 @@ namespace NorenRestApiWrapper
 
                 try
                 {
-                    msg = JsonSerializer.Deserialize<NorenResponseMsg>(data);
+                    msg = JsonSerializer.Deserialize<NorenResponseMsg>(data,  new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
                 }
                 catch (Exception ex)
                 {
@@ -140,7 +140,7 @@ namespace NorenRestApiWrapper
             {
                 try
                 {                    
-                    Message = JsonSerializer.Deserialize<T>(data);
+                    Message = JsonSerializer.Deserialize<T>(data,  new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
                     ResponseNotifyInstance?.Invoke(Message);
                     ResponseHandler(Message, true);                    
                 } 
