@@ -187,6 +187,20 @@ namespace NorenRestApiWrapper
             return true;
         }
 
+        public bool SendGenerateOtp(OnResponse response, string endpoint, string user, string panorpwd)
+        {
+            ForgotPassword forgotPassword = new ForgotPassword();
+            forgotPassword.uid = user;
+            forgotPassword.pan = panorpwd;
+            
+
+            string uri = "FgtPwdOTP";
+            rClient.endPoint = endpoint;
+            var ResponseHandler = new NorenApiResponse<ForgotPasswordResponse>(response);
+            rClient.makeRequest(ResponseHandler, uri, forgotPassword.toJson());
+            return true;
+        }
+
         #endregion
         public bool SendGetUserDetails(OnResponse response)
         {
