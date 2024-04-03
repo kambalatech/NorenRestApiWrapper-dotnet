@@ -3,6 +3,7 @@ using System;
 using System.Text;
 using System.Security.Cryptography;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace NorenRestApiWrapper
 {
@@ -570,10 +571,22 @@ namespace NorenRestApiWrapper
             return true;
         }
 
-        public bool GetDailyTPSeries(OnResponse response, string endpoint, string exch, string token, string starttime, string endtime)
+        public bool GetDailyChartData(OnResponse response, string exch, string tsym, string starttime, string endtime)
         {           
-            return true;
+            return SendGetEodChartData(response, exch, tsym, starttime, endtime);
         }
+
+        public bool SendGetEodChartData(OnResponse response, string exch, string tsym, string starttime, string endtime)
+        {
+            var eod = new EodChart();
+            eod.uid = loginReq.uid;
+            eod.sym = exch + ":" + tsym;
+            eod.from = starttime;
+            eod.to = endtime;
+            string uri = "EODChartData";
+            rClient.makeRequest(new NorenApiResponseList<GetEodChartDataResponse, EodChartItem>(response), uri, eod.toJson(), getJKey);
+            return true;
+        }       
 
         public bool SendGetOptionChain(OnResponse response, string exch, string tsym, string strprc, int count)
         {

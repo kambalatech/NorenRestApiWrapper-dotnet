@@ -1160,6 +1160,32 @@ namespace NorenRestApiWrapper
         public List<TPSeriesItem> values => list;
 
     }
+    public class EodChart : NorenMessage
+    {
+        public string uid;
+        public string sym;
+        public string from;
+        public string to;        
+    }
+
+
+    public class EodChartItem
+    {
+        public string time;
+        public string into;
+        public string inth;
+        public string intl;
+        public string intc;
+        public string intv;
+        public string ssboe;
+    }
+
+    public class GetEodChartDataResponse : NorenListResponseMsg<EodChartItem>
+    {
+        public List<EodChartItem> values => list;
+
+    }
+
     public class IndexList : NorenMessage
     {
         public string uid;
