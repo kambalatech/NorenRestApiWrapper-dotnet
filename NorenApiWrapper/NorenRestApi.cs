@@ -187,12 +187,14 @@ namespace NorenRestApiWrapper
             return true;
         }
 
-        public bool SendGenerateOtp(OnResponse response, string endpoint, string user, string panorpwd)
+        public bool SendGenerateOtp(OnResponse response, string endpoint, string user, string pwd)
         {
             ForgotPassword forgotPassword = new ForgotPassword();
             forgotPassword.uid = user;
-            forgotPassword.pan = panorpwd;
-            
+            var encpwd = ComputeSha256Hash(pwd);
+            encpwd = ComputeSha256Hash(encpwd);
+            encpwd = ComputeSha256Hash(encpwd);
+            forgotPassword.pan = encpwd;
 
             string uri = "FgtPwdOTP";
             rClient.endPoint = endpoint;
