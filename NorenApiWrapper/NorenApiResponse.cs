@@ -58,11 +58,30 @@ namespace NorenRestApiWrapper
                 {                    
                     if(data[0] == '[')
                     {
+                        //eodchartdata is array of strings
+                        if (data.Length > 2 && data[0] == '[' && data[1] == '\"')
+                        {
+                            var jsonArray = JsonSerializer.Deserialize<List<string>>(data);
+                            var resultList = new List<U>();
+                            foreach (var item in jsonArray)
+                            {
+                                var deserializedItem = JsonSerializer.Deserialize<U>(item, new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
+                                resultList.Add(deserializedItem);
+                            }
+                            Message.list = resultList;
+                            Message.stat = "Ok";
+                            Message.request_time = "";
+                            Message.emsg = "";
+
+                        }
+                        else
+                        { 
                         //json lists begin with [
-                        Message.list = JsonSerializer.Deserialize<List<U>>(data,  new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
-                        Message.stat = "Ok";
-                        Message.request_time = "";
-                        Message.emsg = "";
+                            Message.list = JsonSerializer.Deserialize<List<U>>(data,  new JsonSerializerOptions() { IgnoreNullValues = true, IncludeFields = true });
+                            Message.stat = "Ok";
+                            Message.request_time = "";
+                            Message.emsg = "";
+                        }
                     }
                     else
                     {
@@ -76,7 +95,8 @@ namespace NorenRestApiWrapper
 
                 }
                 catch (JsonException ex)
-                {
+                {                   
+
                     Console.WriteLine($"Message Received {data}");
                     Console.WriteLine($"Error deserializing data {ex.ToString()}");
                     return;
