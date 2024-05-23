@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
@@ -1315,4 +1316,11 @@ namespace NorenRestApiWrapper
         public string remarks;
         public string url;
     }
+
+    public class GetHsTokenResponse : NorenResponseMsg
+    {
+        public string hstk;
+    }
+
 }
+

@@ -203,6 +203,18 @@ namespace NorenRestApiWrapper
             return true;
         }
 
+        public bool SendGetHSToken(OnResponse response)
+        {
+            UserDetails userDetails = new UserDetails();
+            userDetails.uid = loginReq.uid;
+
+            string uri = "GetHsToken";
+            var ResponseHandler = new NorenApiResponse<GetHsTokenResponse>(response);
+            rClient.makeRequest(ResponseHandler, uri, userDetails.toJson());
+            return true;
+        }
+
+
         #endregion
         public bool SendGetUserDetails(OnResponse response)
         {
@@ -485,6 +497,8 @@ namespace NorenRestApiWrapper
             rClient.makeRequest(new NorenApiResponse<StandardResponse>(response), uri, optGreeks.toJson(), getJKey);
             return true;
         }
+
+        
         #endregion
         #region others
         public bool SendGetExchMsg(OnResponse response, ExchMsg exchmsg)
