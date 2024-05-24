@@ -210,7 +210,7 @@ namespace NorenRestApiWrapper
 
             string uri = "GetHsToken";
             var ResponseHandler = new NorenApiResponse<GetHsTokenResponse>(response);
-            rClient.makeRequest(ResponseHandler, uri, userDetails.toJson());
+            rClient.makeRequest(ResponseHandler, uri, userDetails.toJson(), getJKey);
             return true;
         }
 
