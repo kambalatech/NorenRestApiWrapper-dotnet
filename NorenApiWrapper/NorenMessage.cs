@@ -1049,10 +1049,10 @@ namespace NorenRestApiWrapper
         public List<BasketListItem> basketlists;
         public override string toJson()
         {
-            tsym = HttpUtility.UrlEncode(tsym);
+            //tsym = HttpUtility.UrlEncode(tsym);
             foreach (BasketListItem item in basketlists)
             {
-                item.tsym = HttpUtility.UrlEncode(tsym);
+                item.tsym = HttpUtility.UrlEncode(item.tsym);
             }
             return base.toJson();
         }
