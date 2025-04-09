@@ -63,6 +63,13 @@ namespace NorenRestApiWrapper
                       if(responseTask.Exception?.InnerExceptions?.Count > 0)
                       {
                           Console.WriteLine("Exception: {0}", responseTask.Exception.InnerException);
+                          string status = "Not_Ok";
+                          string errorMessage = "Http Exception";
+                          string exceptionDetail = responseTask.Exception.InnerException.ToString();
+
+                          data = $"{{\"stat\":\"{status}\", \"emsg\":\"{errorMessage}: {exceptionDetail}\"}}";
+
+                          response.OnMessageNotify(responseTask.Result, data);
                       }
                       if(responseTask.IsCompleted)
                       { 
