@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;          //Needs to be added
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;          //Needs to be added
 
 namespace NorenRestApiWrapper
 {
@@ -63,15 +65,18 @@ namespace NorenRestApiWrapper
                       if(responseTask.Exception?.InnerExceptions?.Count > 0)
                       {
                           Console.WriteLine("Exception: {0}", responseTask.Exception.InnerException);
-                          string status = "Not_Ok";
-                          string errorMessage = "Http Exception";
                           string exceptionDetail = responseTask.Exception.InnerException.ToString();
+                          var errorObj = new
+                          {
+                              stat = "Not_Ok",
+                              emsg = $"Http Exception: {exceptionDetail}"
+                          };
 
-                          data = $"{{\"stat\":\"{status}\", \"emsg\":\"{errorMessage}: {exceptionDetail}\"}}";
-
-                          response.OnMessageNotify(responseTask.Result, data);
+                          data = JsonSerializer.Serialize(errorObj);
+                          
+                          response.OnMessageNotify(null, data);
                       }
-                      if(responseTask.IsCompleted)
+                      if(responseTask.IsCompleted && responseTask.Status == TaskStatus.RanToCompletion )
                       { 
                           data = await responseTask.Result.Content.ReadAsStringAsync();
 
@@ -90,8 +95,8 @@ namespace NorenRestApiWrapper
                           else 
                               response.OnMessageNotify(responseTask.Result, data);
                       }
-                  });
-            
+                  }).Unwrap();
+
 
             return;
 

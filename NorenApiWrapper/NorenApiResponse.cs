@@ -155,8 +155,15 @@ namespace NorenRestApiWrapper
 
             if (Message == null)
                 return;
+            if(httpResponse == null)
+            {
+                NorenResponseMsg msg = GetNorenMessage(data);
+                Message.stat = msg.stat;
+                Message.emsg = msg.emsg;
 
-            if (httpResponse.IsSuccessStatusCode)
+                ResponseHandler(Message, false);
+            }
+            else if (httpResponse.IsSuccessStatusCode)
             {
                 try
                 {                    
