@@ -68,6 +68,18 @@ namespace NorenRestApiWrapper
         {
             loginResp = responseMsg as LoginResponse;
         }
+        internal void OnGetAccessTokenResponseNotify(NorenResponseMsg responseMsg)
+        {
+            var accessTokenRsp = responseMsg as GetAccessTokenResponse;
+            string uid = accessTokenRsp.UserId;
+            string ref_tok = accessTokenRsp.refresh_token;
+            string actid = accessTokenRsp.actid;
+            string usertoken = accessTokenRsp.susertoken;
+
+            this.SetSession(null, uid, uid, usertoken);
+            rClient.injectOAuthHeader(accessTokenRsp.access_token);
+        }
+
         #endregion
         #region helpers
         string ComputeSha256Hash(string rawData)
@@ -111,6 +123,36 @@ namespace NorenRestApiWrapper
 
 
             rClient.makeRequest(ResponseHandler, uri, login.toJson());
+            return true;
+        }
+
+        public string SendgetOAuthURL(OnResponse response, string oauth_url, string apiKey)
+        {
+            string ret_url = oauth_url + "%s?client_id=" + apiKey;
+            return ret_url;
+        }
+        public bool SendgetAccessToken(OnResponse response, string endPoint, string authCode, string secretKey, string appKey, string uid)
+        {
+            // SHA256 hash
+            string dataToHash = appKey + secretKey + authCode;
+            string appVerifier;
+            using (var sha256 = SHA256.Create())
+            {
+                var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(dataToHash));
+                appVerifier = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            }
+            GetAccessToken accessToken = new GetAccessToken
+            {
+                code = authCode,
+                checksum = appVerifier,
+                uid = uid
+            };
+            rClient.endPoint = endPoint;
+            string uri = "GenAcsTok";
+            var ResponseHandler = new NorenApiResponse<GetAccessTokenResponse>(response);
+            
+            rClient.makeRequest(ResponseHandler, uri, accessToken.toJson());
+           
             return true;
         }
 

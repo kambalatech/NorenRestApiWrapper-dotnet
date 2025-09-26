@@ -37,6 +37,15 @@ namespace NorenRestApiWrapper
             client.DefaultRequestHeaders.ExpectContinue = false;
         }
 
+        public bool injectOAuthHeader(string access_token)
+        {
+            // Add Bearer token
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", access_token);
+           
+            return true;
+        }
+
         public async void makeRequest(BaseApiResponse response,string uri, string message, string key = null)
         {
             

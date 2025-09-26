@@ -1322,5 +1322,20 @@ namespace NorenRestApiWrapper
         public string hstk;
     }
 
+    public class GetAccessToken : NorenMessage
+    {
+        public string code;
+        public string checksum;
+        public string uid;
+    }
+    public class GetAccessTokenResponse : NorenResponseMsg
+    {
+        public string access_token;
+        public string UserId;
+        public string refresh_token;
+        public string actid;
+        public string susertoken;
+    }
+
 }
 
