@@ -98,7 +98,7 @@ namespace NorenRestApiWrapper
         {
             //once websocket is connected, lets create a app session
             ConnectMessage connect = new ConnectMessage();
-            connect.t = "c";
+            connect.t = "a";
             connect.uid = _uid;
             connect.actid = _uid;
             connect.susertoken = _susertoken;

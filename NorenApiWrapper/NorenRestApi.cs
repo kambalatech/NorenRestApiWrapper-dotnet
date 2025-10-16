@@ -108,7 +108,7 @@ namespace NorenRestApiWrapper
         /// <param name="endPoint"></param>
         /// <param name="login"></param>
         /// <returns></returns>
-        public bool SendLogin(OnResponse response, string endPoint,LoginMessage login)
+        bool SendLogin(OnResponse response, string endPoint,LoginMessage login)
         {
             loginReq = login;
             login.pwd = ComputeSha256Hash(login.pwd);
@@ -126,15 +126,15 @@ namespace NorenRestApiWrapper
             return true;
         }
 
-        public string SendgetOAuthURL(OnResponse response, string oauth_url, string apiKey)
+        public string SendgetOAuthURL(string oauth_url, string apiKey)
         {
-            string ret_url = oauth_url + "%s?client_id=" + apiKey;
+            string ret_url = oauth_url + "?client_id=" + apiKey;
             return ret_url;
         }
-        public bool SendgetAccessToken(OnResponse response, string endPoint, string authCode, string secretKey, string appKey, string uid)
+        public bool SendgetAccessToken(OnResponse response, string endPoint, string authCode, string secretcode, string client_id, string uid)
         {
             // SHA256 hash
-            string dataToHash = appKey + secretKey + authCode;
+            string dataToHash = client_id + secretcode + authCode;
             string appVerifier;
             using (var sha256 = SHA256.Create())
             {
@@ -150,7 +150,8 @@ namespace NorenRestApiWrapper
             rClient.endPoint = endPoint;
             string uri = "GenAcsTok";
             var ResponseHandler = new NorenApiResponse<GetAccessTokenResponse>(response);
-            
+            ResponseHandler.ResponseNotifyInstance += OnGetAccessTokenResponseNotify;
+
             rClient.makeRequest(ResponseHandler, uri, accessToken.toJson());
            
             return true;

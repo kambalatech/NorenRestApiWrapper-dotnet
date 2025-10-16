@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.17.0</Version>
+    <Version>2.0.0</Version>
     <Company>Kambala Solutions Pvt Ltd</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>09-04-2025 HTTP exception is returned</Description>
@@ -11,5 +11,9 @@
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="5.0.0" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)NorenApiWrapper.dll&quot; &quot;C:\workspace\kambala\github\NorenApi-dotNet\Deps\&quot; /Y&#xD;&#xA;" />
+  </Target>
 
 </Project>
