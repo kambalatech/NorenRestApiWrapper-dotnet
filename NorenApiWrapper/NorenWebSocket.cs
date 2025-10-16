@@ -7,7 +7,7 @@ namespace NorenRestApiWrapper
     {
         WebSocket _ws = new WebSocket();
         string _uid;
-        string _susertoken;
+        string _accesstoken;
         string _endpoint;
 
         // Delegates for connection callbacks
@@ -42,12 +42,12 @@ namespace NorenRestApiWrapper
             _ws.OnError += _onError;           
         }
 
-        public void Start(string url, string uid, string susertoken, OnFeed marketdataHandler, OnOrderFeed orderHandler)
+        public void Start(string url, string uid, string accesstoken, OnFeed marketdataHandler, OnOrderFeed orderHandler)
         {
             //member init
             _endpoint = url;
             _uid = uid;
-            _susertoken = susertoken;
+            _accesstoken = accesstoken;
            
             //app initializers
             OnFeedCallback = marketdataHandler;
@@ -101,7 +101,7 @@ namespace NorenRestApiWrapper
             connect.t = "a";
             connect.uid = _uid;
             connect.actid = _uid;
-            connect.susertoken = _susertoken;
+            connect.accesstoken = _accesstoken;
             _ws.Send(connect.toJson());
             Console.WriteLine($"Create Session: {connect.toJson()}");
         }

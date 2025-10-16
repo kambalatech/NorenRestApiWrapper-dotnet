@@ -33,7 +33,7 @@ namespace NorenRestApiWrapper
         
         LoginResponse loginResp;
         LoginMessage loginReq;
-
+        GetAccessTokenResponse accessTokenResp;
         
         public OnResponse SessionCloseCallback
         {
@@ -75,6 +75,14 @@ namespace NorenRestApiWrapper
             string ref_tok = accessTokenRsp.refresh_token;
             string actid = accessTokenRsp.actid;
             string usertoken = accessTokenRsp.susertoken;
+
+            accessTokenResp = new GetAccessTokenResponse();
+
+            accessTokenResp.UserId = accessTokenRsp.UserId;
+            accessTokenResp.refresh_token = accessTokenRsp.refresh_token;
+            accessTokenResp.actid = accessTokenRsp.actid;
+            accessTokenResp.susertoken = accessTokenRsp.susertoken;
+            accessTokenResp.access_token = accessTokenRsp.access_token;
 
             this.SetSession(null, uid, uid, usertoken);
             rClient.injectOAuthHeader(accessTokenRsp.access_token);
@@ -169,6 +177,8 @@ namespace NorenRestApiWrapper
             loginResp = new LoginResponse();                      
             loginResp.actid = uid;
             loginResp.susertoken = usertoken;
+
+            
 
             return true;
         }
@@ -689,7 +699,7 @@ namespace NorenRestApiWrapper
             wsclient.onStreamCloseCallback = this.onStreamCloseCallback;
             wsclient.onStreamErrorCallback = this.onStreamErrorCallback;
 
-            wsclient.Start(url, loginReq.uid, loginResp?.susertoken, marketdataHandler, orderHandler);
+            wsclient.Start(url, loginReq.uid, accessTokenResp?.access_token, marketdataHandler, orderHandler);
 
             return true;
         }

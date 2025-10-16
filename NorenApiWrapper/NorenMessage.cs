@@ -115,7 +115,7 @@ namespace NorenRestApiWrapper
     {
         public string uid;
         public string actid;
-        public string susertoken;
+        public string accesstoken;
     }
 
     public class SubscribeTouchline : NorenStreamMessage
