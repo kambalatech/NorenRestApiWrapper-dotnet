@@ -1331,7 +1331,7 @@ namespace NorenRestApiWrapper
     public class GetAccessTokenResponse : NorenResponseMsg
     {
         public string access_token;
-        public string UserId;
+        public string uid;
         public string refresh_token;
         public string actid;
         public string susertoken;

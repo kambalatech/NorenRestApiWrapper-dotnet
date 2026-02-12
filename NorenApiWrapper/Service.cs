@@ -40,9 +40,9 @@ namespace NorenRestApiWrapper
         public bool injectOAuthHeader(string access_token)
         {
             // Add Bearer token
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", access_token);
-           
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access_token);
+
+            
             return true;
         }
 
@@ -54,17 +54,19 @@ namespace NorenRestApiWrapper
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, uri);
 
-            
 
-            if(key != null)
-                request.Content = new StringContent(message + "&" + key,
-                                                Encoding.UTF8,
-                                                "application/json");//CONTENT-TYPE header
-            else
-                request.Content = new StringContent(message,
+
+            //if (key != null)
+            //{
+            //    request.Content = new StringContent(message + "&" + key,
+            //                                    Encoding.UTF8,
+            //                                    "application/json");//CONTENT-TYPE header
+            //}
+            //else
+            request.Content = new StringContent(message,
                                                 Encoding.UTF8,
                                                 "application/json");//CONTENT-TYPE 
-            Console.WriteLine("Request:" + uri + " " + message);
+            Console.WriteLine("Request:" + uri + request.Headers.ToString() + " " + message);
 
             await client.SendAsync(request)
                   .ContinueWith(async responseTask =>

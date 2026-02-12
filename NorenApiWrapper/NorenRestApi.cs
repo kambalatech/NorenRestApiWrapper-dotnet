@@ -71,14 +71,14 @@ namespace NorenRestApiWrapper
         internal void OnGetAccessTokenResponseNotify(NorenResponseMsg responseMsg)
         {
             var accessTokenRsp = responseMsg as GetAccessTokenResponse;
-            string uid = accessTokenRsp.UserId;
+            string uid = accessTokenRsp.uid;
             string ref_tok = accessTokenRsp.refresh_token;
             string actid = accessTokenRsp.actid;
             string usertoken = accessTokenRsp.susertoken;
 
             accessTokenResp = new GetAccessTokenResponse();
 
-            accessTokenResp.UserId = accessTokenRsp.UserId;
+            accessTokenResp.uid = accessTokenRsp.uid;
             accessTokenResp.refresh_token = accessTokenRsp.refresh_token;
             accessTokenResp.actid = accessTokenRsp.actid;
             accessTokenResp.susertoken = accessTokenRsp.susertoken;

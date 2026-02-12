@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <Company>Kambala Solutions Pvt Ltd</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Description>09-04-2025 HTTP exception is returned</Description>
+    <Description>12-02-2026 OAuth requests fixed</Description>
   </PropertyGroup>
 
   <ItemGroup>
